@@ -233,7 +233,7 @@ class Consensus(BaseTab):
 			tprot: protein id in the multifasta file (str)
 			self.dataO : pd.DataFrame with the following structure
 			  Sequence Appearance %_CP %_TP Prot_IDs
-			0      QRS          0    0    0 ''        
+			0      QRS          0    0    0       ''        
 		"""
 	 #--- Get sequence in the given positions
 		seq = []
