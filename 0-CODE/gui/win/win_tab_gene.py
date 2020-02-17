@@ -1,11 +1,24 @@
 # ------------------------------------------------------------------------------
-# 	Copyright (C) 2019-2020 Kenny Bravo Rodriguez
-
-# 	This program is distributed for free in the hope that it will be useful,
-# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-# 	See the accompaning licence for more details.
+# Author: Kenny Bravo Rodriguez 2019 (kenny.bravorodriguez@mpi-dortmund.mpg.de)
+# 
+# Copyright (c) 2019-2020 Max Planck Institute of Molecular Physiology
+#
+# This complete copyright notice must be included in any revised version of the
+# source code. Additional authorship citations may be added, but existing
+# author citations must be preserved.
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
 
 """ This module generates the tab to extract the N-terminally peptides from a 
@@ -14,11 +27,10 @@
 """
 
 #--- Imports
-## Standard modules
 import wx
 from operator import itemgetter
 from pathlib import Path
-## My modules
+
 import config.config     as config
 import data.data_methods as dmethods
 from gui.win.win_tab_base import BaseTab
@@ -36,6 +48,7 @@ class GeneFromFasta(BaseTab):
 
 	def __init__(self, parent, statusbar):
 		""" """
+
 	 #--- Initial Setup
 		self.nameTab = config.tabName['gene']
 		super().__init__(parent=parent, statusbar=statusbar)
@@ -89,9 +102,10 @@ class GeneFromFasta(BaseTab):
 		# self.tcOutFile.SetValue('/Users/bravo/Desktop/gene.txt')
 	#---
 
-	#--- Methods of the class
+ #--- Methods of the class
 	def OnGeneFile(self, event):
 		""" Select gene file """
+
 	 #--- Configure
 		msg = config.myGeneFile[self.nameTab]['Msg']
 		ext = config.myGeneFile[self.nameTab]['ExtLong']
@@ -108,7 +122,6 @@ class GeneFromFasta(BaseTab):
 		""" Set default values """
 
 		self.tcUserValue.SetValue('5 10 20 50')
-
 		return True
 	#---
 

@@ -1,24 +1,39 @@
 # ------------------------------------------------------------------------------
-# 	Copyright (C) 2019-2020 Kenny Bravo Rodriguez
-
-# 	This program is distributed for free in the hope that it will be useful,
-# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-# 	See the accompaning licence for more details.
+# Author: Kenny Bravo Rodriguez 2019 (kenny.bravorodriguez@mpi-dortmund.mpg.de)
+# 
+# Copyright (c) 2019-2020 Max Planck Institute of Molecular Physiology
+#
+# This complete copyright notice must be included in any revised version of the
+# source code. Additional authorship citations may be added, but existing
+# author citations must be preserved.
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
+
 
 """ This module contain the class to configure the consensus search tab """
 
+
 #--- Imports
-## Standard modules
 import wx
 import ast 
-## My modules
+
 import config.config as config
 from gui.win.win_base import BaseWin
 from gui.win.win_supp import GuiCheck
 #---
+
 
 class ConsensusSearchConfig(BaseWin, GuiCheck):
 	""" Configure window for searching in Consensus Tab  """
@@ -120,9 +135,10 @@ class ConsensusSearchConfig(BaseWin, GuiCheck):
 		self.Show()
 	#---
  	
-	#--- Methods of the class
+ #--- Methods of the class
 	def InitVal(self):
 		""" Try to read and use initial values in parent wx.TextCtrl """
+	
 	 #--- Get value
 		myString = self.parentW.pageC.tcUserValue.GetValue()
 		if myString == '':
@@ -148,6 +164,7 @@ class ConsensusSearchConfig(BaseWin, GuiCheck):
 
 	def OnCancel(self, event):
 		""" Just close the window """  
+
 		self.Close()
 		return True
 	#---
@@ -187,6 +204,7 @@ class ConsensusSearchConfig(BaseWin, GuiCheck):
 		""" Create the extra widgets needed to fill the scrolled window based
 			on the requested number of residues in the consensus sequence
 		"""
+
 	 #--- Variables
 	  #--- Needed to use GuiCheck
 		self.d = {}
@@ -216,6 +234,7 @@ class ConsensusSearchConfig(BaseWin, GuiCheck):
 
 	def CreateShowWidgets(self, NRow):
 		""" Create the widgets and place them in the sizer """
+
 	 #--- Create the header
 		self.stPosList.append(wx.StaticText(
 			self.swMatrix,

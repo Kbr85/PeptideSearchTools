@@ -1,27 +1,42 @@
 # ------------------------------------------------------------------------------
-# 	Copyright (C) 2019-2020 Kenny Bravo Rodriguez
-
-# 	This program is distributed for free in the hope that it will be useful,
-# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-# 	See the accompaning licence for more details.
+# Author: Kenny Bravo Rodriguez 2019 (kenny.bravorodriguez@mpi-dortmund.mpg.de)
+# 
+# Copyright (c) 2019-2020 Max Planck Institute of Molecular Physiology
+#
+# This complete copyright notice must be included in any revised version of the
+# source code. Additional authorship citations may be added, but existing
+# author citations must be preserved.
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
+
 
 """ This module contain methods to check user input """
 
+
 #--- Imports
-## Standard modules
 from pathlib import Path
-## My modules
 #---
 
-#--------------------------------------------------- Files (Down) 
+
+#------------------------------------------------------------------------- Files
 def CheckFileRead(var):
 	""" Check if var points to a file that can be read in.
 		---
 		var : path the file (string or path)
 	"""
+
  #--- Variables
 	mfile = Path(var)
  #--- Check & Return
@@ -33,11 +48,13 @@ def CheckFileRead(var):
 		return False
 #---
 
+
 def CheckFileWrite(var):
 	""" Check if var points to a file that can be used for write.
 		---
 		var : path the file (string or path)
 	"""
+
  #--- Create path object
 	varP = Path(var)
  #--- Test write
@@ -48,11 +65,10 @@ def CheckFileWrite(var):
 	except Exception:
 		return False
 #---
-#--------------------------------------------------- Files (Up)
+#------------------------------------------------------------------------- Files
 
 
-
-#--------------------------------------------------- Numbers (Down)
+#----------------------------------------------------------------------- Numbers
 def CheckNumType(var, t='float'):
 	""" Check that var holds a number of type t. 
 		---
@@ -61,6 +77,7 @@ def CheckNumType(var, t='float'):
 		---
 		Returns the number with the correct type. 
 	"""
+
  #--- Variables
 	k = True
  #--- Set the correct type
@@ -84,6 +101,7 @@ def CheckNumType(var, t='float'):
 		return [False, None]
 #---
 
+
 def CheckNumComp(num, comp='egt', val=0):
 	""" Compare num to val using comp
 		---
@@ -91,6 +109,7 @@ def CheckNumComp(num, comp='egt', val=0):
 		comp: egt >= val, e == val, gt > val, elt <= val, lt < val (string)
 		val : value to compare against (int, float, etc) 
 	"""
+
  #--- Variables
 	k = True
  #--- Compare
@@ -129,6 +148,7 @@ def CheckNumComp(num, comp='egt', val=0):
 		return False
 #---
 
+
 def CheckaWithincd(a, c, d):
 	""" Check that a >= c & a <= d
 		---
@@ -141,17 +161,17 @@ def CheckaWithincd(a, c, d):
 	else:
 		return False
 #---
-#--------------------------------------------------- Numbers (Up)
+#----------------------------------------------------------------------- Numbers
 
 
-
-#--------------------------------------------------- List (Down)
+#-------------------------------------------------------------------------- List
 def CheckListUniqueElements(l, NA=False):
 	""" Check that a list does not contains repeated elements
 		---
 		l : flat list
 		NA: allow NA elements in the list or not (boolean)
 	"""
+
  #--- Remove multiple NA elements if they are allowed
 	if NA == False:
 		lo = list(set(l))
@@ -165,8 +185,10 @@ def CheckListUniqueElements(l, NA=False):
 		return False
 #---
 
+
 def CheckListAinListB(listA, listB):
 	""" Check that all elements in listA are present in listB """
+
 	for i in listA:
 		if i in listB:
 			pass
@@ -174,4 +196,4 @@ def CheckListAinListB(listA, listB):
 			return False
 	return True
 #---
-#--------------------------------------------------- List (Up)
+#-------------------------------------------------------------------------- List

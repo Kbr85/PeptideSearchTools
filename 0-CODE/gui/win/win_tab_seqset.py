@@ -1,30 +1,45 @@
 # ------------------------------------------------------------------------------
-# 	Copyright (C) 2019-2020 Kenny Bravo Rodriguez
-
-# 	This program is distributed for free in the hope that it will be useful,
-# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-# 	See the accompaning licence for more details.
+# Author: Kenny Bravo Rodriguez 2019 (kenny.bravorodriguez@mpi-dortmund.mpg.de)
+# 
+# Copyright (c) 2019-2020 Max Planck Institute of Molecular Physiology
+#
+# This complete copyright notice must be included in any revised version of the
+# source code. Additional authorship citations may be added, but existing
+# author citations must be preserved.
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
+
 
 """ This module generates the tab to compute the ocurrence of a set of sequences
 	in a multifasta file
 """
 
+
 #--- Imports
-## Standard modules
 import wx
 import itertools
 import pandas as pd
 from pathlib import Path
-## My modules
+
 import config.config     as config
 import data.data_methods as dmethods
 import gui.gui_methods as gmethods
 from gui.win.win_tab_base import BaseTab
 from gui.win.win_supp import MyWarningMessageOK
 #---
+
 
 class Consensus(BaseTab):
 	""" Class to create the panel computing the probability to find a set of
@@ -33,6 +48,7 @@ class Consensus(BaseTab):
 
 	def __init__(self, parent, statusbar):
 		""" """
+
 	 #--- Initial Setup
 		self.nameTab = config.tabName['seqset']
 		self.ScanDict = {
@@ -76,7 +92,7 @@ class Consensus(BaseTab):
 		# self.tcOutFile.SetValue('/Users/kenny/Desktop/consensus.txt')
 	#---
 
-	#--- Methods of the class
+ #--- Methods of the class
 	def OnConf(self, event): 
 		""" Show the configure window """
 
@@ -235,6 +251,7 @@ class Consensus(BaseTab):
 			  Sequence Appearance %_AP %_TP Prot_IDs
 			0      QRS          0    0    0       ''        
 		"""
+
 	 #--- Get sequence in the given positions
 		seq = []
 		for k in self.do['PosAAL']:
@@ -273,7 +290,7 @@ class Consensus(BaseTab):
 			  Sequence Appearance %_AP %_TP Prot_IDs
 			0      QRS          0    0    0 ''        
 		"""
-	 #---
+
 		self.dataO[['Appearance', 'Prot_IDs']] = self.dataO.apply(
 			self.ScanSeqNoPosLookSeq,
 			axis=1,
@@ -290,6 +307,7 @@ class Consensus(BaseTab):
 			tseq : protein sequence (str)
 			tprot: protein id (str)
 		"""
+
 		if row[0] in tseq:
 			a = row[1] + 1
 			if row[4] == '':

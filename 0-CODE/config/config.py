@@ -1,21 +1,34 @@
 # ------------------------------------------------------------------------------
-# 	Copyright (C) 2019-2020 Kenny Bravo Rodriguez
-
-# 	This program is distributed for free in the hope that it will be useful,
-# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-# 	See the accompaning licence for more details.
+# Author: Kenny Bravo Rodriguez 2019 (kenny.bravorodriguez@mpi-dortmund.mpg.de)
+# 
+# Copyright (c) 2019-2020 Max Planck Institute of Molecular Physiology
+#
+# This complete copyright notice must be included in any revised version of the
+# source code. Additional authorship citations may be added, but existing
+# author citations must be preserved.
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
+
 
 """ This module contains the main configuration parameters of the app """
 
-#--- Imports
-## Standard modules
-import platform
-## My modules
 
+#--- Imports
+import platform
 #---
+
 
 # ------------------------------------------------------------------------------
 # NON-CONFIGURABLE PARAMETERS
@@ -49,14 +62,14 @@ win = { # To track the existence and number of certain windows.
 	'Open'  : [], # List of all open windows in the program
  #--> Main like windows
 	winName['main']      : None,
-	'copyShow'           : True, # This is to show the copyright only when the app starts
 	winName['licagr']    : None,
 	winName['help']      : None,
 	winName['confSearch']: None,
+	'copyShow'           : True, # This is to show the copyright only when the app starts
 }
 
 title = { # Title of the main windows
-	winName['main']      : name + ' v' + version,
+	winName['main']      : name + ' ' + version,
 	winName['licagr']    : "License Agreement",
 	winName['help']      : 'Quick Help',
 	winName['confSearch']: 'Consensus Search Configuration',
@@ -105,6 +118,8 @@ size = { # Size related options
 }
 
 msg = { # Messages in the App
+	'Copyright' :("Copyright (c) 2019-2020 Max Planck Institute of Molecular "
+		"Physiology"),
 	'Open' : {
 		'DataFile'   : 'Select the data file',
 		'FastaFile'  : 'Select the fasta file',
@@ -234,7 +249,7 @@ dictKey = { # Label for widgets in the windows
 	},
 }
 
-dataFrame = {
+dataFrame = { # Data frames info
 	'Header' : {
 		tabName['seqset'] : [
 			'Sequence', 
@@ -277,10 +292,10 @@ pointer = { # Pointer to methods in different classes to avoid repeating if
 }
 
 naVals = [ # Possible NA values
-	'N', 'n', 'No', 'NO', 'NA', ''
+	'N', 'n', 'No', 'NO', 'NA', '',
 ]
 
 oneLetterAA = [ # AA one letter codes
 	'A', 'I', 'L', 'V', 'M', 'F', 'W', 'Y', 'R', 'K', 'D', 'E', 'C', 'Q',
-	'H', 'S', 'T', 'N', 'G', 'P'
+	'H', 'S', 'T', 'N', 'G', 'P',
 ]

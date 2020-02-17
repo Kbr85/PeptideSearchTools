@@ -1,26 +1,41 @@
 # ------------------------------------------------------------------------------
-# 	Copyright (C) 2019-2020 Kenny Bravo Rodriguez
-
-# 	This program is distributed for free in the hope that it will be useful,
-# 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-# 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-# 	See the accompaning licence for more details.
+# Author: Kenny Bravo Rodriguez 2019 (kenny.bravorodriguez@mpi-dortmund.mpg.de)
+# 
+# Copyright (c) 2019-2020 Max Planck Institute of Molecular Physiology
+#
+# This complete copyright notice must be included in any revised version of the
+# source code. Additional authorship citations may be added, but existing
+# author citations must be preserved.
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
+
 
 """ This module contain classes for supporting windows e.g. select files """
 
+
 #--- Imports
-## Standard modules
 import wx
 import ast
 from pathlib import Path
-## My modules
+
 import config.config as config
 import data.data_methods as dmethods
 import check.check_single as checkS
 import check.check_multiple as checkM
 #---
+
 
 class GuiCheck():
 	""" This class contains only methods to check user input """
@@ -35,6 +50,7 @@ class GuiCheck():
 			msg : error message (str)
 			NA: is allowed or not (boolean)
 		"""
+
 	 #--- Set Initial values and check for NA values 
 		if self.SetInitVal(tc, n, msg, NA):
 			pass
@@ -59,6 +75,7 @@ class GuiCheck():
 			msg : error message (str)
 			NA: is allowed or not (boolean)
 		"""
+
 	 #--- Set Initial values and check for NA values 
 		if self.SetInitVal(tc, n, msg, NA):
 			pass
@@ -83,6 +100,7 @@ class GuiCheck():
 			comp : zero comparison (str)
 			NA: is allowed or not (boolean)			
 		"""
+
 	 #--- Set Initial values and check for NA values 
 		if self.SetInitVal(tc, n, msg, NA):
 			pass
@@ -113,6 +131,7 @@ class GuiCheck():
 			Unique: elements must be unique (boolean)
 			DelRepeat: delete repeating elements (boolean)								
 		"""
+
 	 #--- Set Initial values and check NA
 		if self.SetInitVal(tc, n, msg, NA):
 			pass
@@ -150,6 +169,7 @@ class GuiCheck():
 			comp: egt >= val, e == val, gt > val, elt <= val, lt < val (string)
 			val: value to compare against (number)			
 		"""
+
 	 #--- Set Initial values and check NA
 		if self.SetInitVal(tc, n, msg, NA):
 			pass
@@ -217,6 +237,7 @@ class GuiCheck():
 			tc: wx.TextCtrl with the user given value
 			n: key for self.d & self.do
 		"""
+
 	 #--- Get string in tc
 		val = tc.GetValue()
 	 #--- Set self.d[n] & self.do[n]
@@ -241,6 +262,7 @@ class GuiCheck():
 			---
 			NA: NA values are allowed or not (boolean) 
 		"""
+
 	  #--> Check NA
 		if NA:
 			return True
@@ -264,10 +286,13 @@ class GuiCheck():
 	#---
 #---
 
+
 class MyOpenFile(wx.FileDialog):
 	""" Defines my custom open file dialog window """
 
 	def __init__(self, message, wildcard):
+		""""""
+
 		super().__init__(
 			None, 
 			message=message, 
@@ -277,10 +302,13 @@ class MyOpenFile(wx.FileDialog):
 	#---
 #---
 
+
 class MySaveFile(wx.FileDialog):
 	""" My save file windows """
 
 	def __init__(self, message, wildcard):
+		""""""
+
 		super().__init__(
 			None, 
 			message=message, 
@@ -290,10 +318,13 @@ class MySaveFile(wx.FileDialog):
 	#---
 #---
 
+
 class MySuccessMessage(wx.MessageDialog):
 	""" Defines a custom message box with title All done!!! and style """
 	
 	def __init__(self, message):
+		""""""
+
 		super().__init__(
 			None, 
 			message=message, 
@@ -306,11 +337,14 @@ class MySuccessMessage(wx.MessageDialog):
 	#---
 #---
 
+
 class MyFatalErrorMessage(wx.MessageDialog):
 	""" Defines a custom message box with title Fatal Error Detected and style 
 	"""
 
 	def __init__(self, message):
+		""""""
+
 		super().__init__(
 			None, 
 			message=message, 
@@ -323,10 +357,13 @@ class MyFatalErrorMessage(wx.MessageDialog):
 	#---
 #---
 
+
 class MyWarningMessageOK(wx.MessageDialog):
 	""" Defines a custom warning message """
 
 	def __init__(self, message):
+		""""""
+
 		super().__init__(
 			None, 
 			message=message, 
