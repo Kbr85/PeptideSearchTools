@@ -212,7 +212,7 @@ class Consensus(BaseTab):
 		else:
 			pass 
 	 #--- Calculate %
-		self.dataO['%_CP'] = 100.0 * (self.dataO['Appearance'] / self.protsselT)
+		self.dataO['%_AP'] = 100.0 * (self.dataO['Appearance'] / self.protsselT)
 		self.dataO['%_TP'] = 100.0 * (self.dataO['Appearance'] / self.prottotal)
 		self.sum = self.dataO['Appearance'].sum()
 	 #--- Sort on Appearance
@@ -232,7 +232,7 @@ class Consensus(BaseTab):
 			tseq : protein sequence (str)
 			tprot: protein id in the multifasta file (str)
 			self.dataO : pd.DataFrame with the following structure
-			  Sequence Appearance %_CP %_TP Prot_IDs
+			  Sequence Appearance %_AP %_TP Prot_IDs
 			0      QRS          0    0    0       ''        
 		"""
 	 #--- Get sequence in the given positions
@@ -270,7 +270,7 @@ class Consensus(BaseTab):
 			tseq : protein sequence (str)
 			tprot: protein id in the multifasta file (str)
 			self.dataO : pd.DataFrame with the following structure
-			  Sequence Appearance %_CP %_TP Prot_IDs
+			  Sequence Appearance %_AP %_TP Prot_IDs
 			0      QRS          0    0    0 ''        
 		"""
 	 #---
@@ -317,10 +317,10 @@ class Consensus(BaseTab):
 		 #--- Write output
 			oFile.write('Output data:\n')
 			oFile.write('Total proteins:\t' + str(self.prottotal) + '\n')
-			oFile.write('Total complete proteins:\t' + str(self.protsselT) + '\n')
+			oFile.write('Total analyzed proteins:\t' + str(self.protsselT) + '\n')
 			oFile.write('Total consensus sequence (Absolute):\t' + str(self.sum) + '\n')
 			oFile.write('Total consensus sequence (Percent, TP):\t' + str(self.sum * 100.0 / self.prottotal) + '\n')
-			oFile.write('Total consensus sequence (Percent, CP):\t' + str(self.sum * 100.0 / self.protsselT) + '\n')
+			oFile.write('Total consensus sequence (Percent, AP):\t' + str(self.sum * 100.0 / self.protsselT) + '\n')
 			oFile.write('\n')
 			dmethods.FFsWriteCSV(oFile, self.dataO)
 			oFile.write('\n\n')

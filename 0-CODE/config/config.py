@@ -131,7 +131,7 @@ msg = { # Messages in the App
 		'Field_Res2Extract' : ("In the field Residues to extract\nonly integers"
 			" greater than zero can be accepted"),
 		'NoPeptide' : ("There were no N-terminal peptides found in the "
-			"Data File.'"),
+			"Data File."),
 		'NoGene' : ("There were no genes found in the given Gene File"),
 		'NoProt' : ("There were no proteins from the specified genes in the"
 			" given fasta formatted file."),
@@ -207,7 +207,7 @@ fatalErrorsMsg = { # Fatal error msgs
 		'fRes'     : msg['Errors']['Field_FirstResidue'],
 		'fResCol'  : msg['Errors']['Field_FirstCol'],
 		'col2Ext'  : msg['Errors']['Field_ColExtract'],
-		'noPeptide': msg['Errors']['NoPeptide'],
+		'NoPeptide': msg['Errors']['NoPeptide'],
 	},
 	tabName['gene'] : {
 		'iFile'    : msg['Errors']['FastaFile'],
@@ -239,7 +239,7 @@ dataFrame = {
 		tabName['seqset'] : [
 			'Sequence', 
 			'Appearance', 
-			'%_CP',
+			'%_AP',
 			'%_TP',
 			'Prot_IDs',
 		],

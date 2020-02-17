@@ -16,6 +16,7 @@
 #--- Imports
 ## Standard modules
 import wx
+from operator import itemgetter
 from pathlib import Path
 ## My modules
 import config.config     as config
@@ -279,6 +280,7 @@ class GeneFromFasta(BaseTab):
 					oFile.write('1-' + str(i) + '\n')
 			end = len(self.dataO)
 		  #--- Data
+			self.dataO.sort(key=itemgetter(0, 1))
 			dmethods.FFsWriteList(oFile, self.dataO)
 			oFile.write('\n\n')
 		  #--- File last line

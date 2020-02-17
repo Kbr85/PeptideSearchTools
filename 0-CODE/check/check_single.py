@@ -50,6 +50,8 @@ def CheckFileWrite(var):
 #---
 #--------------------------------------------------- Files (Up)
 
+
+
 #--------------------------------------------------- Numbers (Down)
 def CheckNumType(var, t='float'):
 	""" Check that var holds a number of type t. 
@@ -140,6 +142,8 @@ def CheckaWithincd(a, c, d):
 		return False
 #---
 #--------------------------------------------------- Numbers (Up)
+
+
 
 #--------------------------------------------------- List (Down)
 def CheckListUniqueElements(l, NA=False):
