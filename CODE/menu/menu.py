@@ -25,51 +25,40 @@
 """ This module creates the menu of the app """
 
 
-#--- Imports
+#region -------------------------------------------------------------> Imports
 import wx
 
 import config.config as config
 import gui.gui_methods as gmethods
-#---
+#endregion ----------------------------------------------------------> Imports
 
-
-class MainMenuBar(wx.MenuBar):
-	""" Main menu of the app """
+#region ----------------------------------------------------> Individual menus
+class SearchMenu(wx.Menu):
+	"""Search menu of the app"""
 
 	#region --------------------------------------------------- Instance Setup
 	def __init__(self):
 		""" """
-
+		#region -----------------------------------------------> Initial setup
 		super().__init__()
-	 #--> Menu items
-	  #--> Notebook menu
-		NoteBookMenu = wx.Menu()
-		NoteBookMenu.Append(101, config.tabName['pept']+'\tAlt+Ctrl+P')
-		NoteBookMenu.Append(102, config.tabName['gene']+'\tAlt+Ctrl+G')
-		NoteBookMenu.Append(103, config.tabName['seqset']+'\tAlt+Ctrl+C')
-	  #---
-	  #--> Help menu
-		HelpMenu = wx.Menu()
-		HelpMenu.Append(301, config.winName['help'])
-		HelpMenu.AppendSeparator()
-		HelpMenu.Append(302, config.winName['licagr'])
-	  #---
-	 #--> Attach to menubar
-		self.Append(NoteBookMenu, '&Search')
-		self.Append(HelpMenu, '&Help')
-	 #---
-	 #--> Bind
-		self.Bind(wx.EVT_MENU, self.OnTabPeptide, id=101)
-		self.Bind(wx.EVT_MENU, self.OnTabGene, id=102)
-		self.Bind(wx.EVT_MENU, self.OnTabSeqSet, id=103)
-		self.Bind(wx.EVT_MENU, self.OnHelp, id=301)
-		self.Bind(wx.EVT_MENU, self.OnLicAgr, id=302)
+	 	#endregion --------------------------------------------> Initial setup
+
+		#region --------------------------------------------------> Menu items
+		self.pept   = self.Append(-1, config.tabName['pept']+'\tAlt+Ctrl+P')
+		self.gene   = self.Append(-1, config.tabName['gene']+'\tAlt+Ctrl+G')
+		self.seqset = self.Append(-1, config.tabName['seqset']+'\tAlt+Ctrl+C')
+		#endregion -----------------------------------------------> Menu items
+
+		#region --------------------------------------------------------> Bind
+		self.Bind(wx.EVT_MENU, self.OnTabPeptide, source=self.pept)
+		self.Bind(wx.EVT_MENU, self.OnTabGene,    source=self.gene)
+		self.Bind(wx.EVT_MENU, self.OnTabSeqSet,  source=self.seqset)
+		#endregion -----------------------------------------------------> Bind
 	 #---
 	#---
-	#endregion ------------------------------------------------ Instance Setup
+	#endregion -----------------------------------------------> Instance setup
 
-	# --------------------------------------------------- Methods of the class
-	#region --------------------------------------------------------- id = 1xx
+	#region ---------------------------------------------------> Class methods
 	def OnTabPeptide(self, event):
 		""" Creates the main window and show the peptide tab """
 
@@ -90,9 +79,34 @@ class MainMenuBar(wx.MenuBar):
 		gmethods.TabSelect(config.tabOrder[config.tabName['seqset']])
 		return True
 	#---	
-	#endregion ------------------------------------------------------ id = 1xx
+	#endregion ------------------------------------------------> Class methods
+#---
 
-  	#region --------------------------------------------------------- id = 3xx
+class HelpMenu(wx.Menu):
+	"""Help menu of the app"""
+
+	#region --------------------------------------------------- Instance Setup
+	def __init__(self):
+		""" """
+		#region -----------------------------------------------> Initial setup
+		super().__init__()
+	 	#endregion --------------------------------------------> Initial setup
+
+		#region --------------------------------------------------> Menu items
+		self.help = self.Append(-1, config.winName['help'])
+		self.AppendSeparator()
+		self.lic = self.Append(-1, config.winName['licagr'])
+		#endregion -----------------------------------------------> Menu items
+
+		#region --------------------------------------------------------> Bind
+		self.Bind(wx.EVT_MENU, self.OnHelp,   source = self.help)
+		self.Bind(wx.EVT_MENU, self.OnLicAgr, source = self.lic)
+		#endregion -----------------------------------------------------> Bind
+	 #---
+	#---
+	#endregion -----------------------------------------------> Instance setup
+
+	#region ---------------------------------------------------> Class methods
 	def OnLicAgr(self, event):
 		""" Show the window for the Lic Agreement """
 
@@ -105,6 +119,32 @@ class MainMenuBar(wx.MenuBar):
 
 		gmethods.WinMainTypeCreate(config.winName['help'])
 		return True
-	#---
-	#endregion ------------------------------------------------------ id = 3xx
+	#endregion ------------------------------------------------> Class methods
 #---
+
+#endregion -------------------------------------------------> Individual menus
+
+#region ------------------------------------------------------------> MenuBars
+class MainMenuBar(wx.MenuBar):
+	""" Main menu of the app """
+
+	#region --------------------------------------------------- Instance Setup
+	def __init__(self):
+		""" """
+		#region -----------------------------------------------> Initial setup
+		super().__init__()
+	 	#endregion --------------------------------------------> Initial setup
+		
+		#region -------------------------------------------------------> Menus
+		search = SearchMenu()
+		helpM = HelpMenu() 
+
+		self.Append(search, '&Search')
+		self.Append(helpM, '&Help')
+		#endregion ----------------------------------------------------> Menus
+	#---
+	#endregion ------------------------------------------------ Instance Setup
+#---
+#endregion ---------------------------------------------------------> MenuBars
+
+
