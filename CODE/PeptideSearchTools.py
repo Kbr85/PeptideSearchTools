@@ -103,38 +103,25 @@ class SplashWindow(wx.adv.SplashScreen):
 	#region ----------------------------------------------> Overridden methods
 	def OnClose(self, event):
 		""" Finish app configuration.
-		
+
 			Overridden method
 		"""
 
 		#region	-----------------------------------------------------> Imports
 		import config.config as config
 		import menu.menu as menu
-		import gui.gui_methods as gmethods
-		from gui.win.win_main import MainWin 
-		from gui.win.win_help import HelpWin
-		from gui.win.win_lic_agreement import LicAgreementWin
-		from gui.win.win_seqset_conf import ConsensusSearchConfig
+		import gui.window as window
 		#endregion---------------------------------------------------> Imports
-	 
+
 		#region -----------------------------------------------------> MenuBar
 		if config.cOS == "Darwin":
 			wx.MenuBar.MacSetCommonMenuBar(menu.MainMenuBar())
 		else:
 			pass
 		#endregion --------------------------------------------------> MenuBar
-		
-		#region ----------------------------------------------------> Pointers
-		config.pointer['gmethods']['WinCreate'] = { # Modules/util windows
-			config.winName['main']      : MainWin,
-			config.winName['licagr']    : LicAgreementWin,
-			config.winName['help']      : HelpWin,
-			config.winName['confSearch']: ConsensusSearchConfig,
-		}
-		#endregion -------------------------------------------------> Pointers
 
 		#region ------------------------------------------> Create main window
-		gmethods.WinMainTypeCreate(config.winName["main"])
+		window.MainWindow()
 		#endregion ---------------------------------------> Create main window
 
 		#region --------------------------------------------> Destroy & Return

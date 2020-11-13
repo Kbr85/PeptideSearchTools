@@ -28,6 +28,7 @@ basePath = Path(
 #--> FOLDERS TO COPY
 source = basePath / 'CODE'
 img    = basePath / 'RESOURCES/IMAGES'
+lic    = basePath / 'RESOURCES/LICENSE'
 #--> FILES TO COPY
 licensetxt = basePath / 'License.txt'
 #endregion --------------------------------------------------------> VARIABLES
@@ -69,6 +70,12 @@ if var == "Y" or var == "y":
 	resI = res / 'IMAGES'
 	copy_tree(str(img), str(resI))
    #---
+   #--> IMAGES
+	print('')
+	print('Copying Resources: LICENSE')
+	resI = res / 'LICENSE'
+	copy_tree(str(lic), str(resI))
+   #---   
   #---
   #--> SPEC
 	print('')
