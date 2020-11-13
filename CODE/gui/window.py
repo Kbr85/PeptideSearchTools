@@ -63,13 +63,13 @@ class MainWindow(wx.Frame):
 		#region -----------------------------------------------> Initial setup
 		self.name = config.name['Window']['MainW']
 
-		# self.tabMethods = {
-		# 	'PeptS' : self.CreateTab_PeptS,
-		# 	'Gene'  : self.CreateTab_Gene,
-		# 	'SeqSet': self.CreateTab_SeqSet,
-		# 	'LicAgr': self.CreateTab_LicAgr,
-		# 	'Help'  : self.CreateTab_Help,
-		# }
+		self.tabMethods = {
+			# 'PeptS' : self.CreateTab_PeptS,
+			# 'Gene'  : self.CreateTab_Gene,
+			# 'SeqSet': self.CreateTab_SeqSet,
+			'LicAgr': dtsWindow.TxtContentWin,
+			'Help'  : dtsWindow.TxtContentWin,
+		}
 
 		super().__init__(
 			parent = parent,
@@ -118,23 +118,25 @@ class MainWindow(wx.Frame):
 		win = self.FindWindowByName(name)
 		#endregion --------------------------------------------------> Get tab
 		if win is None:
-			print(config.file['License'])
 		 #--> Create tab
-			self.notebook.AddPage(
-				dtsWindow.LicenseWin(
-					self.notebook,
-					config.file['License'],
-					name,
-				),
-				config.title[name],
-			)
-			self.notebook.SetSelection(
-				self.notebook.GetPageIndex(
-					self.FindWindowByName(
-						name
+			if name in ('LicAgr', 'Help'):
+				self.notebook.AddPage(
+					dtsWindow.TxtContentWin(
+						self.notebook,
+						config.file[name],
+						name,
+					),
+					config.title[name],
+				)
+				self.notebook.SetSelection(
+					self.notebook.GetPageIndex(
+						self.FindWindowByName(
+							name
+						)
 					)
 				)
-			)
+			else:
+				pass
 		else:
 		 #--> Focus
 			self.notebook.SetSelection(self.notebook.GetPageIndex(win))

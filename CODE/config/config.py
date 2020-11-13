@@ -98,7 +98,8 @@ path = { # Relevant paths
 	'Resources': res,
 }
 file = { # Location of important files
-	'License' : res / 'LICENSE/license.txt',
+	'LicAgr': res / 'TXT/license.txt',
+	'Help'  : res / 'TXT/example.txt',
 }
 #endregion ---------------------------------------------------> Path and Files
 
@@ -106,7 +107,6 @@ file = { # Location of important files
 size = { # Base size for widgets
 	'MainW' : (900, 400),
 }
-
 #endregion ------------------------------------------------------------> Sizes
 
 
