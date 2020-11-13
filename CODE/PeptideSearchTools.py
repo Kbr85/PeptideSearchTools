@@ -24,65 +24,134 @@
 
 """ This module starts the application """
 
+#region -------------------------------------------------------------> Imports
+import os
+import platform
 
-#--- Imports
 import wx
+import wx.adv
+#region -------------------------------------------------------------> Imports
 
-import config.config as config
-import menu.menu as menu
-import gui.gui_methods as gmethods
-from gui.win.win_main import MainWin 
-from gui.win.win_help import HelpWin
-from gui.win.win_lic_agreement import LicAgreementWin
-from gui.win.win_seqset_conf import ConsensusSearchConfig
-#---
+DEVELOPMENT = True # # Control variables with different values in dev or prod
 
-
+#region ------------------------------------------------------------> Classess
 class PeptideSearchToolApp(wx.App):
 	""" Initial Setup of the App """
 	
+	#region ----------------------------------------------> Overridden methods
 	def OnInit(self):
 		""" Initialize the app """
 		
-	 #--> Set special configuration values that require a running wx.App
-		self.AppInit()
-	 #---
-	 #--> Show the main frame & Return
-		gmethods.WinMainTypeCreate(config.winName["main"])
-	 #---
-	 #--> Return
+		#region -------------------------------------------> Show SplashScreen
+		cwd = os.path.abspath(os.path.dirname(__file__))
+		cOS = platform.system()
+
+		if cOS == 'Darwin':
+			if DEVELOPMENT:
+				image_loc = (
+					cwd 
+					+ '/RESOURCES/IMAGES/SPLASHSCREEN/splashscreen.png'
+				)
+			else:
+				image_loc = (
+					cwd 
+					+ '/PeptideSearchTools.app/Contents/Resources/IMAGES/SPLASHSCREEN/splashscreen.png'
+				)
+		else:
+			image_loc = cwd + '/RESOURCES/IMAGES/SPLASHSCREEN/splashscreen.png'
+		
+		bitmap = wx.Bitmap(image_loc, type=wx.BITMAP_TYPE_PNG)
+		
+		SplashWindow(bitmap)
+		#endregion ----------------------------------------> Show SplashScreen
+
 		return True
-	 #---
 	#---
+	#endregion -------------------------------------------> Overridden methods
+#---
 
+class SplashWindow(wx.adv.SplashScreen):
+	"""Create splash screen 
+		
+		Parameter
+		---------
+		bitmap : bitmap
+			Image for the splash window
+	"""
+	#region --------------------------------------------------> Instance setup
+	def __init__(self, bitmap):
+		""""""
+		#region -----------------------------------------------> Initial setup
+		super().__init__(
+			bitmap, 
+			wx.adv.SPLASH_CENTER_ON_SCREEN|wx.adv.SPLASH_TIMEOUT,
+			1000,
+			None,	
+		)
+		#endregion --------------------------------------------> Initial setup
+	
+		#region --------------------------------------------------------> Bind
+		self.Bind(wx.EVT_CLOSE, self.OnClose)
+		#endregion -----------------------------------------------------> Bind
+		
+		#region ---------------------------------------------> Position & Show
+		self.Show()
+		#endregion ------------------------------------------> Position & Show
+	#---
+	#endregion -----------------------------------------------> Instance setup
 
-	def AppInit(self):
-		""" Define parameters that requires a wx.App to be already running """
-	   
-	 #--> MenuBar
+	#region ----------------------------------------------> Overridden methods
+	def OnClose(self, event):
+		""" Finish app configuration.
+		
+			Overridden method
+		"""
+
+		#region	-----------------------------------------------------> Imports
+		import config.config as config
+		import menu.menu as menu
+		import gui.gui_methods as gmethods
+		from gui.win.win_main import MainWin 
+		from gui.win.win_help import HelpWin
+		from gui.win.win_lic_agreement import LicAgreementWin
+		from gui.win.win_seqset_conf import ConsensusSearchConfig
+		#endregion---------------------------------------------------> Imports
+	 
+		#region -----------------------------------------------------> MenuBar
 		if config.cOS == "Darwin":
 			wx.MenuBar.MacSetCommonMenuBar(menu.MainMenuBar())
 		else:
 			pass
-	 #---
-	 #--> Configuration options
-	  #--> Pointers
+		#endregion --------------------------------------------------> MenuBar
+		
+		#region ----------------------------------------------------> Pointers
 		config.pointer['gmethods']['WinCreate'] = { # Modules/util windows
 			config.winName['main']      : MainWin,
 			config.winName['licagr']    : LicAgreementWin,
 			config.winName['help']      : HelpWin,
 			config.winName['confSearch']: ConsensusSearchConfig,
 		}
-	 #---
-	 #--> Return
+		#endregion -------------------------------------------------> Pointers
+
+		#region ------------------------------------------> Create main window
+		gmethods.WinMainTypeCreate(config.winName["main"])
+		#endregion ---------------------------------------> Create main window
+
+		#region --------------------------------------------> Destroy & Return
+		self.Destroy()
 		return True
-	 #---
+		#endregion -----------------------------------------> Destroy & Return
 	#---
+	#endregion -------------------------------------------> Overridden methods
 #---
 
+#endregion ---------------------------------------------------------> Classess
 
+#region -----------------------------------------------------------> Start App
 if __name__ == "__main__":
 	app = PeptideSearchToolApp()
 	app.MainLoop()
 else:
 	pass
+#endregion --------------------------------------------------------> Start App
+

@@ -116,27 +116,32 @@ class BaseTab(wx.Panel, GuiCheck):
 		self.sizerboxFiles.Add(
 			self.sizerboxFilesWid,   
 			border=2, 
-			flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			# flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			flag=wx.EXPAND|wx.ALL
 		)
 		self.sizerboxFilesWid.Add(
 			self.buttonInputFile, 
 			border=2, 
-			flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			# flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			flag=wx.EXPAND|wx.ALL
 		)
 		self.sizerboxFilesWid.Add(
 			self.tcInputFile,     
 			border=2, 
-			flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			# flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			flag=wx.EXPAND|wx.ALL
 		)
 		self.sizerboxFilesWid.Add(
 			self.buttonOutFile,   
 			border=2, 
-			flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			# flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			flag=wx.EXPAND|wx.ALL
 		)
 		self.sizerboxFilesWid.Add(
 			self.tcOutFile,       
 			border=2, 
-			flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			# flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			flag=wx.EXPAND|wx.ALL
 		)
 	   #---		
 	   #--> Values
@@ -145,7 +150,8 @@ class BaseTab(wx.Panel, GuiCheck):
 		self.sizerboxValues.Add(
 			self.sizerboxValuesWid,  
 			border=2, 
-			flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			# flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			flag=wx.EXPAND|wx.ALL
 		)
 		self.sizerboxValuesWid.Add(
 			self.stUserValue,
@@ -157,7 +163,8 @@ class BaseTab(wx.Panel, GuiCheck):
 			self.tcUserValue, 
 			pos=(0,1),
 			border=2, 
-			flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			# flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			flag=wx.EXPAND|wx.ALL
 		)	
 	   #---		
 	   #--> Columns
@@ -166,7 +173,8 @@ class BaseTab(wx.Panel, GuiCheck):
 		self.sizerboxColumns.Add(
 			self.sizerboxColumnsWid, 
 			border=2, 
-			flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			# flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			flag=wx.EXPAND|wx.ALL
 		)
 	   #---
 	  #---
@@ -175,36 +183,42 @@ class BaseTab(wx.Panel, GuiCheck):
 		self.sizerButton.Add(
 			self.buttonClear,  
 			border=2, 
-			flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			# flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			flag=wx.EXPAND|wx.ALL
 		)
 		self.sizerButton.Add(
 			self.buttonSetDef, 
 			border=2, 
-			flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			# flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			flag=wx.EXPAND|wx.ALL
 		)
 		self.sizerButton.Add(
 			self.buttonStart,  
 			border=2, 
-			flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			# flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			flag=wx.EXPAND|wx.ALL
 		)
 	  #--- Main Sizer
 		self.sizerTab = wx.GridBagSizer(1, 1)
 		self.sizerTab.Add(
 			self.sizerboxFiles,   
 			pos=(0,0),
-			flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL, 
+			# flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL, 
+			flag=wx.EXPAND|wx.ALL,
 			border=2
 		)
 		self.sizerTab.Add(
 			self.sizerboxValues,  
 			pos=(1,0),
-			flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL, 
+			# flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL, 
+			flag=wx.EXPAND|wx.ALL,
 			border=2
 		)
 		self.sizerTab.Add(
 			self.sizerboxColumns, 
 			pos=(2,0), 
-			flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL, 
+			# flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL, 
+			flag=wx.EXPAND|wx.ALL,
 			border=2
 		)
 		self.sizerTab.Add(

@@ -77,22 +77,26 @@ class GeneFromFasta(BaseTab):
 		self.sizerboxFilesWid.Add(
 			self.buttonGeneFile, 
 			border=2, 
-			flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			# flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			flag=wx.EXPAND|wx.ALL
 		)
 		self.sizerboxFilesWid.Add(
 			self.tcGeneFile, 
 			border=2, 
-			flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			# flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			flag=wx.EXPAND|wx.ALL
 		)
 		self.sizerboxFilesWid.Add(
 			self.buttonOutFile, 
 			border=2, 
-			flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			# flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			flag=wx.EXPAND|wx.ALL
 		)
 		self.sizerboxFilesWid.Add(
 			self.tcOutFile, 
 			border=2, 
-			flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			# flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			flag=wx.EXPAND|wx.ALL
 		)
 	  #---		
 	  #--> Remove not needed items
