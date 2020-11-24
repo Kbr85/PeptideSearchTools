@@ -21,9 +21,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
 
-
 """ This module generates the base class for the tabs in the Notebook """
-
 
 #--- Imports
 import wx

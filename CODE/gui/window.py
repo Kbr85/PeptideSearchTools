@@ -32,6 +32,7 @@ import dat4s_core.widget.wx_window as dtsWindow
 
 import config.config as config
 import menu.menu as menu
+import gui.tab as pstTab
 #endregion ----------------------------------------------------------- Imports
 
 #region ------------------------------------------------------------> Classess
@@ -64,7 +65,7 @@ class MainWindow(wx.Frame):
 		self.name = config.name['Window']['MainW']
 
 		self.tabMethods = {
-			# 'PeptS' : self.CreateTab_PeptS,
+			'PeptS' : pstTab.Peptide,
 			# 'Gene'  : self.CreateTab_Gene,
 			# 'SeqSet': self.CreateTab_SeqSet,
 			'LicAgr': dtsWindow.TxtContentWin,
@@ -136,7 +137,20 @@ class MainWindow(wx.Frame):
 					)
 				)
 			else:
-				pass
+				self.notebook.AddPage(
+					pstTab.Peptide(
+						self.notebook,
+						name,
+					),
+					config.title[name],
+				)
+				self.notebook.SetSelection(
+					self.notebook.GetPageIndex(
+						self.FindWindowByName(
+							name
+						)
+					)
+				)
 		else:
 		 #--> Focus
 			self.notebook.SetSelection(self.notebook.GetPageIndex(win))

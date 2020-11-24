@@ -36,7 +36,6 @@ from pathlib import Path
 #region --------------------------------------------------> General parameters
 development = True # To control variables with different values in dev or prod
 version     = '1.0.1' # String to write in the output files
-licenseType = 'GNU3'
 cOS         = platform.system() # Current operating system
 cwd = Path(os.path.abspath(os.path.dirname(__file__))) # Current directory
 #endregion -----------------------------------------------> General parameters
@@ -109,6 +108,20 @@ size = { # Base size for widgets
 }
 #endregion ------------------------------------------------------------> Sizes
 
+#region --------------------------------------------------------------> Labels
+label = { # Label for wx.Buttons, wx.StaticText, etc
+	'ButtonGroup' : { # For gui.widgets.ButtonGroup
+		'Clear': 'Clear All',
+		'Value': 'Default Values',
+		'Run'  : 'Search',
+	},
+	'BaseTab' : { # For gui.tab.BaseTab
+		'File'  : 'Files',
+		'Value' : 'User-defined values',
+		'Column': 'Columns in the input files',
+	},
+}
+#endregion -----------------------------------------------------------> Labels
 
 
 # win = { # To track the existence and number of certain windows. 
