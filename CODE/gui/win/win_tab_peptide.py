@@ -22,7 +22,7 @@
 # ------------------------------------------------------------------------------
 
 
-""" This module generates the tab to locate the  N-terminally peptide in a 
+""" This module generates the tab to locate the N-terminally peptide in a 
 	MaxQuant peptide.txt file
 """
 

@@ -134,11 +134,11 @@ label = { # Label for wx.Buttons, wx.StaticText, etc
 		'Column': 'Columns in the input files',
 	},
 	'Peptide' : { # For gui.tab.Peptide
+		'DataFile'    : 'Data File',
+		'OutFile'     : 'Output File',
 		'FirstResidue': 'First Residue <=',
 		'StartResidue': 'Start Residue',
 		'ColExtract'  : 'Columns to Extract',
-		'DataFile'    : 'Data File',
-		'OutFile'     : 'Output File',
 		'Column'      : ("#", "Column's name"),
 	},
 }
@@ -164,8 +164,12 @@ hint = { # Hint for wx.TextCtrl
 
 #region ---------------------------------------------------------------> Msg
 msg = { # Messages for the user
+	'Success' : "The analysis finished correctly.",
 	'Step' : { # Statusbar msg for steps in Run
-		'Check' : 'Checking user input',
+		'Check'  : 'Checking user input',
+		'Prepare': f"Preparing the {label['ButtonGroup']['Run']}",
+		'Run'    : "Running the analysis",
+		'Output' : "Writing output",
 	},
 	'Error' : { # Error msgs
 		'Peptide' : { # For gui.tab.Peptide
@@ -187,6 +191,9 @@ msg = { # Messages for the user
 				f"{label['Peptide']['ColExtract']}.\n"
 				f"In addition, numbers must be lower/equal than the total "
 				f"number of columns in the {label['Peptide']['DataFile']}."),
+			'NoPeptide' : (
+				f"There were no N-terminal peptides found in the "
+				f"{label['Peptide']['DataFile']}."),
 		},
 	},
 }

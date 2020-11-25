@@ -28,7 +28,9 @@
 #region -------------------------------------------------------------> Imports
 import wx
 
+import dat4s_core.filefolder.filefolder as dtsFF
 import dat4s_core.widget.wx_widget as dtsWidget
+import dat4s_core.widget.wx_window as dtsWindow
 import dat4s_core.validator.validator as dtsValidator
 
 import config.config as config
@@ -48,6 +50,8 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 
 		Attributes
 		----------
+		parent : wx widget
+			Parent of the pane
 		statusbar : wx.StatusBar
 			Main status bar in the app to display msgs
 		dataFile : dtsWidget.ButtonTextCtrlFF
@@ -71,6 +75,8 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 	def __init__(self, parent, statusbar, lc=None):
 		""""""
 		#region -----------------------------------------------> Initial setup
+		self.parent = parent
+
 		wx.Panel.__init__(self, parent)
 		pstWidget.UserInput.__init__(self, self)
 		#endregion --------------------------------------------> Initial setup
@@ -106,7 +112,7 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 			self.sbValue,
 			stLabel   = config.label['Peptide']['FirstResidue'],
 			tcHint    = config.hint['Peptide']['FirstResidue'],
-			validator = dtsValidator.Number(
+			validator = dtsValidator.NumberList(
 				parent,
 				config.msg['Error']['Peptide']['FirstResidue'],
 				refMin = 1,
@@ -116,7 +122,7 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 			self.sbColumn,
 			stLabel   = config.label['Peptide']['StartResidue'],
 			tcHint    = config.hint['Peptide']['StartResidue'],
-			validator = dtsValidator.Number(
+			validator = dtsValidator.NumberList(
 				parent,
 				config.msg['Error']['Peptide']['StartResidue'],
 				refMin = 0
@@ -239,7 +245,7 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 		msgM = config.msg['Step']['Check']
 		#endregion ------------------------------------------------------> Msg
 		
-		#region ---------------------------------------------> Indivual Fields
+		#region -------------------------------------------> Individual Fields
 		msg = f"{msgM}: {config.label['Peptide']['DataFile']}"
 		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
 		if self.dataFile.tc.GetValidator().Validate(self):
@@ -281,6 +287,164 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 		else:
 			return False
 		#endregion ------------------------------------------> Indivual Fields
+
+		return True
+	#---
+
+	def PrepareRun(self):
+		"""Prepare the run """
+		#region ---------------------------------------------------------> Msg
+		msg = config.msg['Step']['Prepare']
+		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
+		#endregion ------------------------------------------------------> Msg
+
+		#region -----------------------------------------------------> Prepare
+		#--> Input values
+		self.iFile  = self.dataFile.tc.GetValue()
+		self.oFile  = self.outFile.tc.GetValue()
+		self.fRes   = int(" ".join(self.firstRes.tc.GetValue().split()))
+		self.sRes   = int(" ".join(self.startRes.tc.GetValue().split()))
+		self.colExt = list(
+			map(
+				int, 
+				self.colExtract.tc.GetValue().split()
+			)
+		)
+		colExtStr = " ".join(self.colExtract.tc.GetValue().split())
+		#---
+		#--> Needed for the analysis
+		self.lempty   = 0
+		self.ltotal   = 0
+		self.ptotal   = 0
+		self.dataO    = []
+		#---
+		#--> For output
+		self.d = {
+			config.label['Peptide']['DataFile']    : self.iFile,
+			config.label['Peptide']['OutFile']     : self.oFile,
+			config.label['Peptide']['FirstResidue']: self.fRes,
+			config.label['Peptide']['StartResidue']: self.sRes,
+			config.label['Peptide']['ColExtract']  : colExtStr,
+		}
+		#---
+		#endregion --------------------------------------------------> Prepare
+		
+		return True
+	#---
+
+	def RunAnalysis(self):
+		"""Run the analysis"""
+		#region ---------------------------------------------------------> Msg
+		msg = config.msg['Step']['Run']
+		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
+		#endregion ------------------------------------------------------> Msg
+
+		#region ---------------------------------------------------> Variables
+		iFile = open(self.iFile, 'r')
+		#endregion ------------------------------------------------> Variables
+
+		#region -----------------------------------------------------> Process
+		for line in iFile:
+			self.ltotal += 1	
+		 #--> To considerer mac \n or windows \r\n files
+			l = line.split('\n')[0]
+			ll = l.split('\r')[0]
+		 #---
+			lll = ll.split('\t')
+			if self.ltotal == 1:
+			 #--- Set the header for the output file
+				self.header = []
+				for i in self.colExt:
+					self.header.append(lll[i])
+				self.header = '\t'.join(self.header)
+			else:
+				pass
+			if lll[0] == '':
+				self.lempty += 1
+			else:
+				try:
+					tres = int(lll[self.sRes])
+					go = True
+				except Exception:
+					self.lempty += 1
+					go = False
+				if go:
+					if tres <= self.fRes:
+						ltemp = []
+						for i in self.colExt:
+							ltemp.append(lll[i])
+						self.dataO.append(ltemp)
+						self.ptotal += 1
+					else:
+						pass
+				else:
+					pass
+			if not self.ltotal % 100:
+				msg = (
+					'Extracting peptides: Peptides Found  ' 
+					+ str(self.ptotal) 
+					+ ',  Empty Lines Found:  ' 
+					+ str(self.lempty) 
+					+ ',  Total Analyzed Lines:  ' 
+					+ str(self.ltotal)
+				)
+				wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
+			else:
+				pass
+		
+		iFile.close()
+		#endregion --------------------------------------------------> Process
+
+		return True
+	#---
+
+	def WriteOutput(self):
+		""" Write the output """
+		#region ---------------------------------------------------------> Msg
+		msg = config.msg['Step']['Output']
+		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
+		#endregion ------------------------------------------------------> Msg
+
+		#region ---------------------------> Check there is something to write	
+		if self.ptotal == 0:
+			msg = config.msg['Error']['Peptide']['NoPeptide']
+			dtsWindow.MessageDialog('errorF', msg, self)
+			return False
+		else:
+			pass
+		#endregion ------------------------> Check there is something to write	
+
+		#region -------------------------------------------------------> Write
+		#--> Write input data
+		oFile = open(self.oFile, 'w')
+		oFile.write('Input data:\n')
+		dtsFF.WriteDict2File(oFile, self.d)
+		oFile.write('\n')
+		#---
+		#--> Write output
+		oFile.write('Output data:\n')
+		oFile.write(str(self.header) + '\n')
+		dtsFF.WriteList2File(oFile, self.dataO)
+		oFile.write('\n')
+		#---
+		#--> File last line
+		dtsFF.WriteLastLine2File(oFile, config.title['MainW'])
+		#---
+	 	#--> Close file and final summary in statusbar
+		oFile.close()
+
+		self.statusbar.SetStatusText(
+			'Peptides Found  ' 
+			+ str(self.ptotal) 
+			+ ',  Empty Lines Found:  ' 
+			+ str(self.lempty) 
+			+ ',  Total Analyzed Lines:  ' 
+			+ str(self.ltotal)
+		)
+		#---
+		#endregion ----------------------------------------------------> Write
+
+		return True
 	#---
 	#endregion ------------------------------------------------> Class methods
 #---

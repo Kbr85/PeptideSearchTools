@@ -31,6 +31,7 @@ import _thread
 import wx
 
 import dat4s_core.widget.wx_widget as dtsWidget
+import dat4s_core.widget.wx_window as dtsWindow
 
 import config.config as config
 #endregion ----------------------------------------------------------> Imports
@@ -262,6 +263,16 @@ class UserInput():
 		"""Restart GUI and needed variables. This is a minimal implementation. 
 			Override as needed 
 		"""
+		#region ---------------------------------------------------------> Msg
+		if self.runEnd:
+			dtsWindow.MessageDialog(
+				'success', 
+				config.msg['Success'],
+				parent = self.parent,
+			)
+		else:
+			pass
+		#endregion ------------------------------------------------------> Msg
 	 	#region -------------------------------------------------> Restart GUI
 		self.btnGroup.btnRun.Enable()
 		self.btnGroup.btnRun.SetLabel(config.label['ButtonGroup']['Run'])
