@@ -34,7 +34,7 @@ import wx.adv
 
 DEVELOPMENT = True # # Control variables with different values in dev or prod
 
-#region ------------------------------------------------------------> Classess
+#region -------------------------------------------------------------> Classes
 class PeptideSearchToolApp(wx.App):
 	""" Initial Setup of the App """
 	
@@ -132,7 +132,7 @@ class SplashWindow(wx.adv.SplashScreen):
 	#endregion -------------------------------------------> Overridden methods
 #---
 
-#endregion ---------------------------------------------------------> Classess
+#endregion ----------------------------------------------------------> Classes
 
 #region -----------------------------------------------------------> Start App
 if __name__ == "__main__":

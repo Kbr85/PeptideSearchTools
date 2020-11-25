@@ -35,7 +35,7 @@ import menu.menu as menu
 import gui.tab as pstTab
 #endregion ----------------------------------------------------------- Imports
 
-#region ------------------------------------------------------------> Classess
+#region -------------------------------------------------------------> Classes
 class MainWindow(wx.Frame):
 	"""Creates the main window of the App 
 	
@@ -65,7 +65,7 @@ class MainWindow(wx.Frame):
 		self.name = config.name['Window']['MainW']
 
 		self.tabMethods = {
-			'PeptS' : pstTab.Peptide,
+			'PeptS' : pstTab.PeptideTab,
 			# 'Gene'  : self.CreateTab_Gene,
 			# 'SeqSet': self.CreateTab_SeqSet,
 			'LicAgr': dtsWindow.TxtContentWin,
@@ -158,4 +158,4 @@ class MainWindow(wx.Frame):
 	#---
 	#endregion -------------------------------------------------> Menu methods
 #---
-#endregion ---------------------------------------------------------> Classess
+#endregion ----------------------------------------------------------> Classes

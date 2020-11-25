@@ -75,7 +75,8 @@ name = { # Unique names to identify windows/objects through the config file
 		'Help'  : 'Help',
 	},
 	'Panes' : {#--> Panes
-
+		'UserInput' : 'UserInput',
+		'ListCtrl'  : 'ListCtrl',
 	},
 }
 
@@ -88,6 +89,9 @@ title = { # Title of windows, tabs and panes
 	'SeqSet': 'Consensus',
 	'LicAgr': 'License Agreement',
 	'Help'  : 'Quick help',
+	#--> Pane
+	'UserInput' : 'User input',
+	'ListCtrl'  : 'Columns in the main input file',
 }
 #endregion -------------------------------------------------> Names and titles
 
@@ -104,7 +108,10 @@ file = { # Location of important files
 
 #region ---------------------------------------------------------------> Sizes
 size = { # Base size for widgets
-	'MainW' : (900, 450),
+	'MainW' : (900, 480),
+	'ListCtrl' : {
+		'Peptide' : (50, 150),
+	},
 }
 #endregion ------------------------------------------------------------> Sizes
 
@@ -127,11 +134,12 @@ label = { # Label for wx.Buttons, wx.StaticText, etc
 		'Column': 'Columns in the input files',
 	},
 	'Peptide' : { # For gui.tab.Peptide
-		'FirstResidue' : 'First Residue <=',
-		'StartResidue' : 'Start Residue',
-		'ColExtract'   : 'Columns to Extract',
-		'DataFile'     : 'Data File',
-		'OutFile'      : 'Output File',
+		'FirstResidue': 'First Residue <=',
+		'StartResidue': 'Start Residue',
+		'ColExtract'  : 'Columns to Extract',
+		'DataFile'    : 'Data File',
+		'OutFile'     : 'Output File',
+		'Column'      : ("#", "Column's name"),
 	},
 }
 #endregion -----------------------------------------------------------> Labels

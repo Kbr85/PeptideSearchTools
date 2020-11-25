@@ -34,7 +34,7 @@ import gui.gui_methods as gmethods
 
 #region ----------------------------------------------------------> Base menus
 class MenuMethods():
-	"""Hold common methods for the individual menu classess
+	"""Hold common methods for the individual menu Classes
 	
 		Methods
 		-------
