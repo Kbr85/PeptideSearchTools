@@ -233,7 +233,7 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 			self.startRes.tc.SetValue("36")
 			self.colExtract.tc.SetValue("0 38 36 37")
 		else:
-			self.colExtract.tc.SetValue("NA")
+			pass
 		#endregion -------------------------> Test & Default production values
 	#---
 	#endregion -----------------------------------------------> Instance setup
@@ -445,6 +445,15 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 		#endregion ----------------------------------------------------> Write
 
 		return True
+	#---
+
+	def RunEnd(self):
+		""""""
+		#--> Standard ending 
+		super().RunEnd()
+		#---
+		#--> Remove value of Output File to avoid overwriting it
+		self.outFile.tc.SetValue("")
 	#---
 	#endregion ------------------------------------------------> Class methods
 #---

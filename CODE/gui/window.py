@@ -66,7 +66,7 @@ class MainWindow(wx.Frame):
 
 		self.tabMethods = {
 			'PeptS' : pstTab.PeptideTab,
-			# 'Gene'  : self.CreateTab_Gene,
+			'Gene'  : pstTab.GeneTab,
 			# 'SeqSet': self.CreateTab_SeqSet,
 			'LicAgr': dtsWindow.TxtContentWin,
 			'Help'  : dtsWindow.TxtContentWin,
@@ -89,7 +89,7 @@ class MainWindow(wx.Frame):
 
 		self.notebook = aui.auibook.AuiNotebook(
 			self,
-			agwStyle=aui.AUI_NB_TOP|aui.AUI_NB_CLOSE_ON_ALL_TABS,
+			agwStyle=aui.AUI_NB_TOP|aui.AUI_NB_CLOSE_ON_ALL_TABS|aui.AUI_NB_TAB_MOVE,
 		)
 		#endregion --------------------------------------------------> Widgets
 

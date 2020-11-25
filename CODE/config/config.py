@@ -124,16 +124,16 @@ extLong = { # string for the dlg windows representing the extension of the files
 
 #region --------------------------------------------------------------> Labels
 label = { # Label for wx.Buttons, wx.StaticText, etc
-	'ButtonGroup' : { # For gui.widgets.ButtonGroup
+	'ButtonGroup' : { # gui.widgets.ButtonGroup
 		'Clear': 'Clear All',
 		'Run'  : 'Search',
 	},
-	'BaseTab' : { # For gui.tab.BaseTab
+	'BaseTab' : { # gui.tab.BaseTab
 		'File'  : 'Files',
 		'Value' : 'User-defined values',
 		'Column': 'Columns in the input files',
 	},
-	'Peptide' : { # For gui.tab.Peptide
+	'Peptide' : { # gui.tab.PeptideTab
 		'DataFile'    : 'Data File',
 		'OutFile'     : 'Output File',
 		'FirstResidue': 'First Residue <=',
@@ -141,12 +141,18 @@ label = { # Label for wx.Buttons, wx.StaticText, etc
 		'ColExtract'  : 'Columns to Extract',
 		'Column'      : ("#", "Column's name"),
 	},
+	'Gene' : { # gui.tab.GeneTab
+		'FastaFile'     : 'Fasta File',
+		'GeneFile'      : 'Gene File',
+		'OutFile'       : 'Output File',
+		'ResidueExtract': 'Residues to Extract',
+	},
 }
 #endregion -----------------------------------------------------------> Labels
 
 #region ---------------------------------------------------------------> Hints
 hint = { # Hint for wx.TextCtrl
-	'Peptide' : { # For gui.tab.Peptide
+	'Peptide' : { # gui.tab.PeptideTab
 		'DataFile' : f"Path to the {label['Peptide']['DataFile']}.",
 		'OutFile' : f"Path to the {label['Peptide']['OutFile']}.",
 		'FirstResidue' : (
@@ -156,9 +162,18 @@ hint = { # Hint for wx.TextCtrl
 			f"Non-negative Integer, e.g. 36. Column number containing the "
 			f"Start residue numbers."),
 		'ColExtract' : (
-			f"NA or Space-separated list of non-negative integers, e.g. 0 38 36"
-			f" 37. Columns to extract from the {label['Peptide']['DataFile']}."),
+			f"Space-separated list of non-negative integers, e.g. 0 38 36 37. "
+			f"Columns to extract from the {label['Peptide']['DataFile']}."),
 	},
+	'Gene' : { # gui.tab.GeneTab
+		'FastaFile': f"Path to the {label['Gene']['FastaFile']}.",
+		'GeneFile' : f"Path to the {label['Gene']['GeneFile']}.",
+		'OutFile'  : f"Path to the {label['Gene']['OutFile']}.",
+		'ResidueExtract' : (
+			f"Space-separated list of positive integers, e.g. 5 10 20 50. "
+			f"Lengths of the N-terminal peptides to extract from the "
+			f"{label['Gene']['FastaFile']}."),
+	}
 }
 #endregion ------------------------------------------------------------> Hints
 
@@ -172,7 +187,7 @@ msg = { # Messages for the user
 		'Output' : "Writing output",
 	},
 	'Error' : { # Error msgs
-		'Peptide' : { # For gui.tab.Peptide
+		'Peptide' : { # gui.tab.PeptideTab
 			'DataFile' : (
 				f"Select the path to the {label['Peptide']['DataFile']}."),
 			'OutFile' : (
@@ -187,13 +202,23 @@ msg = { # Messages for the user
 				f"number of columns in the {label['Peptide']['DataFile']}."),
 			'ColExtract' : (
 				f"Only a list of space-separated non-negative integer numbers "
-				f"or the value NA can be accepted in "
-				f"{label['Peptide']['ColExtract']}.\n"
+				f"can be accepted in {label['Peptide']['ColExtract']}.\n"
 				f"In addition, numbers must be lower/equal than the total "
 				f"number of columns in the {label['Peptide']['DataFile']}."),
 			'NoPeptide' : (
 				f"There were no N-terminal peptides found in the "
 				f"{label['Peptide']['DataFile']}."),
+		},
+		'Gene' : { # gui.tab.GeneTab
+			'FastaFile' : (
+				f"Select the path to the {label['Gene']['FastaFile']}."),
+			'GeneFile' : (
+				f"Select the path to the {label['Gene']['GeneFile']}."),
+			'OutFile' : (
+				f"Select the path to the {label['Gene']['OutFile']}."),
+			'ResidueExtract' : (
+				f"Only a list of space-separated positive integer numbers "
+				f"can be accepted in {label['Gene']['ResidueExtract']}."),
 		},
 	},
 }
