@@ -266,6 +266,7 @@ class BaseTab():
 	 	#region -------------------------------------------------> Restart GUI
 		self.btnGroup.btnRun.Enable()
 		self.btnGroup.btnRun.SetLabel(config.label['ButtonGroup']['Run'])
+		self.statusbar.SetStatusText("")
 		#endregion ----------------------------------------------> Restart GUI
 
 		#region -------------------------------------------> Restart variables
@@ -288,9 +289,13 @@ class Peptide(wx.Panel, BaseTab):
 			Parent of the widgets
 		name : str
 			Name of the Tab
+		statusbar : wx.StatusBar
+			Main status bar in the app to display msgs
 
 		Attributes
 		----------
+		statusbar : wx.StatusBar
+			Main status bar in the app to display msgs
 		dataFile : dtsWidget.ButtonTextCtrlFF
 			wx.Button & wx.TextCtrl for Data file
 		outFile : dtsWidget.ButtonTextCtrlFF
@@ -309,7 +314,7 @@ class Peptide(wx.Panel, BaseTab):
 	#endregion --------------------------------------------------> Class setup	
 
 	#region --------------------------------------------------> Instance setup
-	def __init__(self, parent, name):
+	def __init__(self, parent, name, statusbar):
 		""""""
 		#region -----------------------------------------------> Initial setup
 		wx.Panel.__init__(self, parent, name=name)
@@ -317,6 +322,8 @@ class Peptide(wx.Panel, BaseTab):
 		#endregion --------------------------------------------> Initial setup
 
 		#region -----------------------------------------------------> Widgets
+		#--> Statusbar
+		self.statusbar = statusbar
 		#--> wx.Button & wx.TextCtrl
 		self.dataFile = dtsWidget.ButtonTextCtrlFF(
 			self.sbFile,
@@ -324,7 +331,7 @@ class Peptide(wx.Panel, BaseTab):
 			tcHint    = config.hint['Peptide']['DataFile'],
 			ext       = config.extLong['Data'],
 			validator = dtsValidator.IsNotEmpty(
-				self,
+				parent,
 				config.msg['Error']['Peptide']['DataFile'],
 			),
 		)
@@ -335,35 +342,38 @@ class Peptide(wx.Panel, BaseTab):
 			ext       = config.extLong['Data'],
 			mode      = 'save',
 			validator = dtsValidator.IsNotEmpty(
-				self,
+				parent,
 				config.msg['Error']['Peptide']['OutFile'],
 			),
 		)
 		#--> wx.StaticText & wx.TextCtrl
 		self.firstRes = dtsWidget.StaticTextCtrl(
 			self.sbValue,
-			stLabel  = config.label['Peptide']['FirstResidue'],
-			tcHint   = config.hint['Peptide']['FirstResidue'],
+			stLabel   = config.label['Peptide']['FirstResidue'],
+			tcHint    = config.hint['Peptide']['FirstResidue'],
 			validator = dtsValidator.Number(
-				self,
+				parent,
 				config.msg['Error']['Peptide']['FirstResidue'],
 				ref  = 1,
 			),
 		)
 		self.startRes = dtsWidget.StaticTextCtrl(
 			self.sbColumn,
-			stLabel = config.label['Peptide']['StartResidue'],
-			tcHint   = config.hint['Peptide']['StartResidue'],
+			stLabel   = config.label['Peptide']['StartResidue'],
+			tcHint    = config.hint['Peptide']['StartResidue'],
 			validator = dtsValidator.Number(
-				self,
+				parent,
 				config.msg['Error']['Peptide']['StartResidue'],
 			),
 		)
 		self.colExtract = dtsWidget.StaticTextCtrl(
 			self.sbColumn,
-			stLabel = config.label['Peptide']['ColExtract'],
-			tcHint   = config.hint['Peptide']['ColExtract'],
-			validator = None,
+			stLabel   = config.label['Peptide']['ColExtract'],
+			tcHint    = config.hint['Peptide']['ColExtract'],
+			validator = dtsValidator.NumberList(
+				parent,
+				config.msg['Error']['Peptide']['ColExtract'],
+			),
 		)
 		#endregion --------------------------------------------------> Widgets
 
@@ -466,7 +476,49 @@ class Peptide(wx.Panel, BaseTab):
 	#endregion -----------------------------------------------> Instance setup
 
 	#region ---------------------------------------------------> Class methods
+	def CheckInput(self):
+		"""Chek user input. Overrides BaseTab.CheckInput"""
+		#region ---------------------------------------------------------> Msg
+		msgM = config.msg['Step']['Check']
+		#endregion ------------------------------------------------------> Msg
+		
+		#region ---------------------------------------------> Indivual Fields
+		msg = f"{msgM}: {config.label['Peptide']['DataFile']}"
+		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
+		if self.dataFile.tc.GetValidator().Validate(self):
+			pass
+		else:
+			return False
 
+		msg = f"{msgM}: {config.label['Peptide']['OutFile']}"
+		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
+		if self.outFile.tc.GetValidator().Validate(self):
+			pass
+		else:
+			return False
+
+		msg = f"{msgM}: {config.label['Peptide']['FirstResidue']}"
+		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
+		if self.firstRes.tc.GetValidator().Validate(self):
+			pass
+		else:
+			return False
+		
+		msg = f"{msgM}: {config.label['Peptide']['StartResidue']}"
+		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
+		if self.startRes.tc.GetValidator().Validate(self):
+			pass
+		else:
+			return False
+
+		msg = f"{msgM}: {config.label['Peptide']['ColExtract']}"
+		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
+		if self.colExtract.tc.GetValidator().Validate(self, 0, 100):
+			pass
+		else:
+			return False
+		#endregion ------------------------------------------> Indivual Fields
+	#---
 	#endregion ------------------------------------------------> Class methods
 #---
 #endregion ---------------------------------------------------------> Classess

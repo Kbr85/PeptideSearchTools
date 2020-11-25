@@ -139,30 +139,44 @@ label = { # Label for wx.Buttons, wx.StaticText, etc
 #region ---------------------------------------------------------------> Hints
 hint = { # Hint for wx.TextCtrl
 	'Peptide' : { # For gui.tab.Peptide
-		'FirstResidue' : ("Integer, e.g. 2. First residue number must be less equal "
-			"than the number given here."),
-		'StartResidue' : ("Integer, e.g. 36. Column number containing the Start residue "
-			"numbers."),
-		'ColExtract' : (f"NA or Space-separated list on integers, e.g. 0 38 36 37. Columns to extract " 
-			f" from the {label['Peptide']['DataFile']}."),
 		'DataFile' : f"Path to the {label['Peptide']['DataFile']}.",
 		'OutFile' : f"Path to the {label['Peptide']['OutFile']}.",
+		'FirstResidue' : (
+			f"Non-negative Integer, e.g. 2. First residue number must be less "
+			f"equal than the number given here."),
+		'StartResidue' : (
+			f"Non-negative Integer, e.g. 36. Column number containing the "
+			f"Start residue numbers."),
+		'ColExtract' : (
+			f"NA or Space-separated list of non-negative integers, e.g. 0 38 36"
+			f" 37. Columns to extract from the {label['Peptide']['DataFile']}."),
 	},
 }
 #endregion ------------------------------------------------------------> Hints
 
 #region ---------------------------------------------------------------> Msg
 msg = { # Messages for the user
+	'Step' : { # Statusbar msg for steps in Run
+		'Check' : 'Checking user input',
+	},
 	'Error' : { # Error msgs
 		'Peptide' : { # For gui.tab.Peptide
-			'FirstResidue' : (f"Only an integer number greater or equal than 1 "
-				f"can be accepted in {label['Peptide']['FirstResidue']}"),
-			'StartResidue' : (f"Only an integer number greater or equal than 0 "
-				f"can be accepted in {label['Peptide']['StartResidue']}"),
-			'DataFile' : (f"Select the path to the "
-				f"{label['Peptide']['DataFile']}"),
-			'OutFile' : (f"Select the path to the "
-				f"{label['Peptide']['OutFile']}"),
+			'DataFile' : (
+				f"Select the path to the {label['Peptide']['DataFile']}."),
+			'OutFile' : (
+				f"Select the path to the {label['Peptide']['OutFile']}."),
+			'FirstResidue' : (
+				f"Only an integer number greater or equal than 1 "
+				f"can be accepted in {label['Peptide']['FirstResidue']}."),
+			'StartResidue' : (
+				f"Only an integer number greater or equal than 0 "
+				f"can be accepted in {label['Peptide']['StartResidue']}."),
+			'ColExtract' : (
+				f"Only a list of space-separated non-negative integer numbers "
+				f"or the value NA can be accepted in "
+				f"{label['Peptide']['ColExtract']}.\n"
+				f"In addition, numbers must be lower/equal than the total "
+				f"number of columns in the {label['Peptide']['DataFile']}."),
 		},
 	},
 }

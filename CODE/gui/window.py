@@ -138,9 +138,10 @@ class MainWindow(wx.Frame):
 				)
 			else:
 				self.notebook.AddPage(
-					pstTab.Peptide(
+					self.tabMethods[name](
 						self.notebook,
 						name,
+						self.statusbar,
 					),
 					config.title[name],
 				)
