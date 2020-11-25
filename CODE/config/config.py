@@ -104,15 +104,21 @@ file = { # Location of important files
 
 #region ---------------------------------------------------------------> Sizes
 size = { # Base size for widgets
-	'MainW' : (900, 400),
+	'MainW' : (900, 450),
 }
 #endregion ------------------------------------------------------------> Sizes
+
+#region ----------------------------------------------------------> Extensions
+extLong = { # string for the dlg windows representing the extension of the files
+	'Data': 'txt files (*.txt)|*.txt',
+	'Seq' : 'txt fasta files (*.txt; *.fasta)|*.txt;*.fasta',
+}
+#endregion -------------------------------------------------------> Extensions
 
 #region --------------------------------------------------------------> Labels
 label = { # Label for wx.Buttons, wx.StaticText, etc
 	'ButtonGroup' : { # For gui.widgets.ButtonGroup
 		'Clear': 'Clear All',
-		'Value': 'Default Values',
 		'Run'  : 'Search',
 	},
 	'BaseTab' : { # For gui.tab.BaseTab
@@ -120,8 +126,47 @@ label = { # Label for wx.Buttons, wx.StaticText, etc
 		'Value' : 'User-defined values',
 		'Column': 'Columns in the input files',
 	},
+	'Peptide' : { # For gui.tab.Peptide
+		'FirstResidue' : 'First Residue <=',
+		'StartResidue' : 'Start Residue',
+		'ColExtract'   : 'Columns to Extract',
+		'DataFile'     : 'Data File',
+		'OutFile'      : 'Output File',
+	},
 }
 #endregion -----------------------------------------------------------> Labels
+
+#region ---------------------------------------------------------------> Hints
+hint = { # Hint for wx.TextCtrl
+	'Peptide' : { # For gui.tab.Peptide
+		'FirstResidue' : ("Integer, e.g. 2. First residue number must be less equal "
+			"than the number given here."),
+		'StartResidue' : ("Integer, e.g. 36. Column number containing the Start residue "
+			"numbers."),
+		'ColExtract' : (f"NA or Space-separated list on integers, e.g. 0 38 36 37. Columns to extract " 
+			f" from the {label['Peptide']['DataFile']}."),
+		'DataFile' : f"Path to the {label['Peptide']['DataFile']}.",
+		'OutFile' : f"Path to the {label['Peptide']['OutFile']}.",
+	},
+}
+#endregion ------------------------------------------------------------> Hints
+
+#region ---------------------------------------------------------------> Msg
+msg = { # Messages for the user
+	'Error' : { # Error msgs
+		'Peptide' : { # For gui.tab.Peptide
+			'FirstResidue' : (f"Only an integer number greater or equal than 1 "
+				f"can be accepted in {label['Peptide']['FirstResidue']}"),
+			'StartResidue' : (f"Only an integer number greater or equal than 0 "
+				f"can be accepted in {label['Peptide']['StartResidue']}"),
+			'DataFile' : (f"Select the path to the "
+				f"{label['Peptide']['DataFile']}"),
+			'OutFile' : (f"Select the path to the "
+				f"{label['Peptide']['OutFile']}"),
+		},
+	},
+}
+#endregion ------------------------------------------------------------> Msg
 
 
 # win = { # To track the existence and number of certain windows. 
@@ -143,10 +188,7 @@ label = { # Label for wx.Buttons, wx.StaticText, etc
 # 	'app' 				 : name,
 # }
 
-# extLong = { # string for the dlg windows representing the extension of the files
-# 	'Data': 'txt files (*.txt)|*.txt',
-# 	'Seq' : 'txt fasta files (*.txt; *.fasta)|*.txt;*.fasta',
-# }
+
 
 # size = { # Size related options
 # 	'window' : {

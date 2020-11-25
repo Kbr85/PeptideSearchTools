@@ -45,10 +45,11 @@ class ButtonGroup():
 
 		Attributes
 		----------
+		parent : wx widget
+			Parent of the buttons. It is assume to be the top parent of the 
+			windows where the buttons will be placed
 		btnClear : wx.Button
 			Button bound to self.OnClear
-		btnValue : wx.Button
-			Button bound to self.OnValue
 		btnRun : dtsWidget.BtnRun 
 			Button to start the analysis
 		Sizer : wx.FlexGridSizer
@@ -62,21 +63,17 @@ class ButtonGroup():
 	def __init__(self, parent):
 		""""""
 		#region -----------------------------------------------> Initial setup
-		
+		self.parent = parent
 		#endregion --------------------------------------------> Initial setup
 
 		#region -----------------------------------------------------> Widgets
-		self.btnClear = wx.Button(
-			parent = parent,
-			label  = config.label['ButtonGroup']['Clear'],
+		self.btnClear = dtsWidget.ButtonClearAll(
+			parent    = parent,
+			label     = config.label['ButtonGroup']['Clear'],
 		)
-		self.btnValue = wx.Button(
+		self.btnRun = wx.Button(
 			parent = parent,
-			label  = config.label['ButtonGroup']['Value'],
-		)
-		self.btnRun = dtsWidget.ButtonRun(
-			parent = parent,
-			label  = config.label['ButtonGroup']['Clear'],
+			label  = config.label['ButtonGroup']['Run'],
 		)
 		#endregion --------------------------------------------------> Widgets
 
@@ -84,47 +81,15 @@ class ButtonGroup():
 		self.Sizer = wx.FlexGridSizer(1, 3, 1, 1)
 		self.Sizer.Add(
 			self.btnClear,
-			border = 2,
-			flag   = wx.EXPAND|wx.ALL
-		)
-		self.Sizer.Add(
-			self.btnValue, 
-			border = 2,
+			border = 10,
 			flag   = wx.EXPAND|wx.ALL
 		)
 		self.Sizer.Add(
 			self.btnRun,
-			border = 2,
+			border = 10,
 			flag   = wx.EXPAND|wx.ALL
 		)
 		#endregion ---------------------------------------------------> Sizers
-
-		#region --------------------------------------------------------> Bind
-		self.btnClear.Bind(wx.EVT_BUTTON, self.OnClear)
-		self.btnValue.Bind(wx.EVT_BUTTON, self.OnValue)
-		#endregion -----------------------------------------------------> Bind
 	#endregion -----------------------------------------------> Instance setup
-
-	#region ---------------------------------------------------> Class methods
-	def OnClear(self, event):
-		""" Clear all user provided input. Override as needed.
-
-			Parameters
-			----------
-			event: wx.Event
-		"""
-		return True
-	#---
-
-	def OnValue(self, event):
-		""" Load default values for GUI's fields. Override as needed.
-
-			Parameters
-			----------
-			event: wx.Event
-		"""
-		return True
-	#---
-	#endregion ------------------------------------------------> Class methods
 #---
 #endregion ---------------------------------------------------------> Classess
