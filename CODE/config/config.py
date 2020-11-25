@@ -178,7 +178,9 @@ msg = { # Messages for the user
 				f"can be accepted in {label['Peptide']['FirstResidue']}."),
 			'StartResidue' : (
 				f"Only an integer number greater or equal than 0 "
-				f"can be accepted in {label['Peptide']['StartResidue']}."),
+				f"can be accepted in {label['Peptide']['StartResidue']}.\n"
+				f"In addition, the number must be lower/equal than the total "
+				f"number of columns in the {label['Peptide']['DataFile']}."),
 			'ColExtract' : (
 				f"Only a list of space-separated non-negative integer numbers "
 				f"or the value NA can be accepted in "

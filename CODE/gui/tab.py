@@ -25,8 +25,6 @@
 """
 
 #region -------------------------------------------------------------- Imports
-import _thread
-
 import wx
 import wx.lib.agw.aui as aui
 

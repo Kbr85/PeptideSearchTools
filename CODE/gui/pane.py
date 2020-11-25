@@ -109,7 +109,7 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 			validator = dtsValidator.Number(
 				parent,
 				config.msg['Error']['Peptide']['FirstResidue'],
-				ref  = 1,
+				refMin = 1,
 			),
 		)
 		self.startRes = dtsWidget.StaticTextCtrl(
@@ -119,6 +119,7 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 			validator = dtsValidator.Number(
 				parent,
 				config.msg['Error']['Peptide']['StartResidue'],
+				refMin = 0
 			),
 		)
 		self.colExtract = dtsWidget.StaticTextCtrl(
@@ -128,6 +129,7 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 			validator = dtsValidator.NumberList(
 				parent,
 				config.msg['Error']['Peptide']['ColExtract'],
+				refMin = 0,
 			),
 		)
 		#endregion --------------------------------------------------> Widgets
@@ -261,14 +263,20 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 		
 		msg = f"{msgM}: {config.label['Peptide']['StartResidue']}"
 		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
-		if self.startRes.tc.GetValidator().Validate(self):
+		if self.startRes.tc.GetValidator().Validate(
+			self, 
+			refMax=self.dataFile.Ncol
+		):
 			pass
 		else:
 			return False
 
 		msg = f"{msgM}: {config.label['Peptide']['ColExtract']}"
 		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
-		if self.colExtract.tc.GetValidator().Validate(self, 0, 100):
+		if self.colExtract.tc.GetValidator().Validate(
+			self, 
+			refMax=self.dataFile.Ncol
+		):
 			pass
 		else:
 			return False

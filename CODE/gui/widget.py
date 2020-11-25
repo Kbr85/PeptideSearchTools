@@ -26,6 +26,8 @@ from wxPython or one widget with a fairly complicated initialization process.
 """
 
 #region -------------------------------------------------------------> Imports
+import _thread
+
 import wx
 
 import dat4s_core.widget.wx_widget as dtsWidget
