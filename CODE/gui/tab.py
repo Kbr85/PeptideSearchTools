@@ -44,6 +44,163 @@ import gui.widget as pstWidget
 
 
 #region -------------------------------------------------------------> Classes
+class ConsensusTab(wx.Panel, pstWidget.UserInput):
+	"""Tab to search consensus sequence in peptides
+	
+		Parameters
+		----------
+		parent : wx widget or None
+			Parent of the tab
+		name : str
+			To identify the tab
+		statusbar : wx.StatusBar
+			Statusbar of the main window to show msgs
+
+		Attributes
+		----------
+		parent : wx widget or None
+			Parent of the tab
+	"""
+	#region --------------------------------------------------> Instance setup
+	def __init__(self, parent, name, statusbar):
+		""""""
+		#region -----------------------------------------------> Initial setup
+		self.parent = parent
+
+		wx.Panel.__init__(self, parent, name=name)
+		pstWidget.UserInput.__init__(self, self)
+		#endregion --------------------------------------------> Initial setup
+
+		#region -----------------------------------------------------> Widgets
+		#--> Statusbar
+		self.statusbar = statusbar
+		#--> wx.Button & wx.TextCtrl
+		self.fastaFile = dtsWidget.ButtonTextCtrlFF(
+			self.sbFile,
+			btnLabel  = config.label['Consensus']['FastaFile'],
+			tcHint    = config.hint['Consensus']['FastaFile'],
+			ext       = config.extLong['Seq'],
+			validator = dtsValidator.IsNotEmpty(
+				parent,
+				config.msg['Error']['Consensus']['FastaFile'],
+			),
+		)
+		self.outFile = dtsWidget.ButtonTextCtrlFF(
+			self.sbFile,
+			btnLabel  = config.label['Consensus']['OutFile'],
+			tcHint    = config.hint['Consensus']['OutFile'],
+			ext       = config.extLong['Data'],
+			mode      = 'save',
+			validator = dtsValidator.IsNotEmpty(
+				parent,
+				config.msg['Error']['Consensus']['OutFile'],
+			),
+		)
+		self.posAA = dtsWidget.ButtonTextCtrl(
+			self.sbValue,
+			btnLabel  = config.label['Consensus']['PosAA'],
+			tcHint    = config.hint['Consensus']['PosAA'],
+			validator = dtsValidator.IsNotEmpty(
+				parent,
+				config.msg['Error']['Consensus']['OutFile'],
+			),
+		)
+		#--> CheckBox
+		self.cbCompProt = wx.CheckBox(
+			self.sbValue,
+			label = config.label['Consensus']['CompProt'],
+		)
+		#endregion --------------------------------------------------> Widgets
+
+		#region ------------------------------------------------------> Sizers
+		#--> wx.StaticBox File
+		self.sizersbFileWid.Add(
+			self.fastaFile.btn,
+			border = 5,
+			flag   = wx.ALIGN_CENTER_VERTICAL|wx.EXPAND|wx.ALL,
+		)
+		self.sizersbFileWid.Add(
+			self.fastaFile.tc,
+			border = 5,
+			flag   = wx.ALIGN_CENTER_VERTICAL|wx.EXPAND|wx.ALL,
+		)
+		self.sizersbFileWid.Add(
+			self.outFile.btn,
+			border = 5,
+			flag   = wx.ALIGN_CENTER_VERTICAL|wx.EXPAND|wx.ALL,
+		)
+		self.sizersbFileWid.Add(
+			self.outFile.tc,
+			border = 5,
+			flag   = wx.EXPAND|wx.ALL,
+		)
+		#--> wx.StaticBox Value
+		self.sizersbValue.Remove(self.sizersbValueWid) # Nedd GridBag instead of FlexGrid
+		self.sizersbValueWid = wx.GridBagSizer(1, 1)
+		self.sizersbValue.Add(
+			self.sizersbValueWid,
+			border = 2,
+			flag   = wx.EXPAND|wx.ALL
+		)
+		self.sizersbValueWid.Add(
+			self.posAA.btn,
+			pos    = (0,0),
+			border = 5,
+			flag   = wx.ALIGN_CENTER_VERTICAL|wx.EXPAND|wx.ALL,
+		)
+		self.sizersbValueWid.Add(
+			self.posAA.tc,
+			pos    = (0,1),
+			border = 5,
+			flag   = wx.EXPAND|wx.ALL,
+		)
+		self.sizersbValueWid.Add(
+			self.cbCompProt,
+			pos    = (1,0),
+			border = 5,
+			span   = (0,2),
+			flag   = wx.EXPAND|wx.ALL,
+		)
+		self.sizersbValueWid.AddGrowableCol(1, 1)
+		#--> wx.StaticBox Column
+		self.sizersbColumn.ShowItems(False)
+		#--> Main Sizer
+		self.Sizer = wx.GridBagSizer(1, 1)
+		self.Sizer.Add(
+			self.sizersbFile,
+			pos    = (0,0),
+			flag   = wx.EXPAND|wx.ALL,
+			border = 5
+		)
+		self.Sizer.Add(
+			self.sizersbValue,
+			pos    = (1,0),
+			flag   = wx.EXPAND|wx.ALL,
+			border = 5
+		)
+		self.Sizer.Add(
+			self.btnGroup.Sizer,
+			pos    = (2,0),
+			flag   = wx.ALIGN_CENTER|wx.ALL,
+			border = 5
+		)
+		self.Sizer.AddGrowableCol(0, 1)
+		self.SetSizer(self.Sizer)
+		self.Sizer.Fit(self)
+		#endregion ---------------------------------------------------> Sizers
+
+		#region ----------------------------> Test & Default production values
+		if config.development:
+			self.fastaFile.tc.SetValue("/Users/bravo/Dropbox/SOFTWARE-DEVELOPMENT/APPS/PEPTIDE_SEARCH_TOOLS/LOCAL/DATA/NEW-DATA/HUMAN_ref_Jan2019.fasta")
+			self.outFile.tc.SetValue("/Users/bravo/TEMP-GUI/BORRAR-PeptideSearchTools/gene-out.txt")
+			self.posAA.tc.SetValue("{2: 'A W', 3: 'S T', 4: 'I A', 'Pos': True}")
+		else:
+			self.colExtract.tc.SetValue("NA")
+		#endregion -------------------------> Test & Default production values
+	#---
+	#endregion -----------------------------------------------> Instance setup
+#---
+
 class GeneTab(wx.Panel, pstWidget.UserInput):
 	"""Tab for the gene search
 	
@@ -60,7 +217,6 @@ class GeneTab(wx.Panel, pstWidget.UserInput):
 		----------
 		parent : wx widget or None
 			Parent of the tab
-
 	"""
 	#region --------------------------------------------------> Instance setup
 	def __init__(self, parent, name, statusbar):

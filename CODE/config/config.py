@@ -147,6 +147,12 @@ label = { # Label for wx.Buttons, wx.StaticText, etc
 		'OutFile'       : 'Output File',
 		'ResidueExtract': 'Residues to Extract',
 	},
+	'Consensus' : { # gui.tab.ConsensusTab
+		'FastaFile': 'Fasta File',
+		'OutFile'  : 'Output File',
+		'PosAA'    : "Positions && AAs",       # && Needed for wxPython
+		'CompProt' : 'Only complete proteins',
+	},
 }
 #endregion -----------------------------------------------------------> Labels
 
@@ -173,7 +179,14 @@ hint = { # Hint for wx.TextCtrl
 			f"Space-separated list of positive integers, e.g. 5 10 20 50. "
 			f"Lengths of the N-terminal peptides to extract from the "
 			f"{label['Gene']['FastaFile']}."),
-	}
+	},
+	'Consensus' : { # gui.tab.ConsensusTab
+		'FastaFile': f"Path to the {label['Consensus']['FastaFile']}.",
+		'OutFile'  : f"Path to the {label['Consensus']['OutFile']}.",
+		'PosAA'    : (
+			f"Dictionary e.g. {{2: 'A W', 3: 'S T', 4: 'I A', 'Pos': True}} "
+			f"with the positions to analyse and the AA to search for."),
+	},
 }
 #endregion ------------------------------------------------------------> Hints
 
@@ -226,6 +239,13 @@ msg = { # Messages for the user
 				f"There were no proteins in the {label['Gene']['FastaFile']} "
 				f"associated with the gene names read from the "
 				f"{label['Gene']['GeneFile']}."),
+		},
+		'Consensus' : { # gui.tab.GeneTab
+			'FastaFile' : (
+				f"Select the path to the {label['Consensus']['FastaFile']}."),
+			'OutFile' : (
+				f"Select the path to the {label['Consensus']['OutFile']}."),
+			'PosAA' : f"",
 		},
 	},
 }

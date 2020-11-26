@@ -67,7 +67,7 @@ class MainWindow(wx.Frame):
 		self.tabMethods = {
 			'PeptS' : pstTab.PeptideTab,
 			'Gene'  : pstTab.GeneTab,
-			# 'SeqSet': self.CreateTab_SeqSet,
+			'SeqSet': pstTab.ConsensusTab,
 			'LicAgr': dtsWindow.TxtContentWin,
 			'Help'  : dtsWindow.TxtContentWin,
 		}
