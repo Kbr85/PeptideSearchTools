@@ -219,6 +219,13 @@ msg = { # Messages for the user
 			'ResidueExtract' : (
 				f"Only a list of space-separated positive integer numbers "
 				f"can be accepted in {label['Gene']['ResidueExtract']}."),
+			'NoGene' : (
+				f"There were no Gene names in the given "
+				f"{label['Gene']['GeneFile']}"),
+			'NoProtFound' : (
+				f"There were no proteins in the {label['Gene']['FastaFile']} "
+				f"associated with the gene names read from the "
+				f"{label['Gene']['GeneFile']}."),
 		},
 	},
 }

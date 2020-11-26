@@ -28,7 +28,8 @@
 #region -------------------------------------------------------------> Imports
 import wx
 
-import dat4s_core.filefolder.filefolder as dtsFF
+import dat4s_core.data.filefolder as dtsFF
+import dat4s_core.data.string as dtsStr
 import dat4s_core.widget.wx_widget as dtsWidget
 import dat4s_core.widget.wx_window as dtsWindow
 import dat4s_core.validator.validator as dtsValidator
@@ -339,60 +340,48 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
 		#endregion ------------------------------------------------------> Msg
 
-		#region ---------------------------------------------------> Variables
-		iFile = open(self.iFile, 'r')
-		#endregion ------------------------------------------------> Variables
-
 		#region -----------------------------------------------------> Process
-		for line in iFile:
-			self.ltotal += 1	
-		 #--> To considerer mac \n or windows \r\n files
-			l = line.split('\n')[0]
-			ll = l.split('\r')[0]
-		 #---
-			lll = ll.split('\t')
-			if self.ltotal == 1:
-			 #--- Set the header for the output file
-				self.header = []
-				for i in self.colExt:
-					self.header.append(lll[i])
-				self.header = '\t'.join(self.header)
-			else:
-				pass
-			if lll[0] == '':
-				self.lempty += 1
-			else:
-				try:
-					tres = int(lll[self.sRes])
-					go = True
-				except Exception:
-					self.lempty += 1
-					go = False
-				if go:
-					if tres <= self.fRes:
-						ltemp = []
-						for i in self.colExt:
-							ltemp.append(lll[i])
-						self.dataO.append(ltemp)
-						self.ptotal += 1
-					else:
-						pass
+		with open(self.iFile, 'r') as iFile:
+			for line in iFile:
+				self.ltotal += 1
+				l = dtsStr.Str2List(line, sep='\t')
+				if self.ltotal == 1:
+				 #--- Set the header for the output file
+					self.header = []
+					for i in self.colExt:
+						self.header.append(l[i])
+					self.header = '\t'.join(self.header)
 				else:
 					pass
-			if not self.ltotal % 100:
-				msg = (
-					'Extracting peptides: Peptides Found  ' 
-					+ str(self.ptotal) 
-					+ ',  Empty Lines Found:  ' 
-					+ str(self.lempty) 
-					+ ',  Total Analyzed Lines:  ' 
-					+ str(self.ltotal)
-				)
-				wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
-			else:
-				pass
-		
-		iFile.close()
+				if l[0] == '':
+					self.lempty += 1
+				else:
+					try:
+						tres = int(l[self.sRes])
+						go = True
+					except Exception:
+						self.lempty += 1
+						go = False
+					if go:
+						if tres <= self.fRes:
+							ltemp = []
+							for i in self.colExt:
+								ltemp.append(l[i])
+							self.dataO.append(ltemp)
+							self.ptotal += 1
+						else:
+							pass
+					else:
+						pass
+				if not self.ltotal % 100:
+					msg = (
+						f"Analysing --> Total Lines: {self.ltotal}, " 
+						f"Empty Lines: {self.lempty}, "
+						f"Peptides: {self.ptotal}"
+					)
+					wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
+				else:
+					pass
 		#endregion --------------------------------------------------> Process
 
 		return True
@@ -433,14 +422,12 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 	 	#--> Close file and final summary in statusbar
 		oFile.close()
 
-		self.statusbar.SetStatusText(
-			'Peptides Found  ' 
-			+ str(self.ptotal) 
-			+ ',  Empty Lines Found:  ' 
-			+ str(self.lempty) 
-			+ ',  Total Analyzed Lines:  ' 
-			+ str(self.ltotal)
+		msg = (
+			f"Final count --> Total Lines: {self.ltotal}, " 
+			f"Empty Lines: {self.lempty}, "
+			f"Peptides: {self.ptotal}"
 		)
+		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
 		#---
 		#endregion ----------------------------------------------------> Write
 
@@ -449,11 +436,14 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 
 	def RunEnd(self):
 		""""""
+		if self.RunEnd:
+			#--> Remove value of Output File to avoid overwriting it
+			self.outFile.tc.SetValue("")
+		else:
+			pass
 		#--> Standard ending 
 		super().RunEnd()
 		#---
-		#--> Remove value of Output File to avoid overwriting it
-		self.outFile.tc.SetValue("")
 	#---
 	#endregion ------------------------------------------------> Class methods
 #---

@@ -25,11 +25,16 @@
 """
 
 #region -------------------------------------------------------------- Imports
+from operator import itemgetter
+
 import wx
 import wx.lib.agw.aui as aui
 
-import dat4s_core.widget.wx_widget as dtsWidget
+import dat4s_core.data.filefolder as dtsFF
+import dat4s_core.data.string as dtsStr
 import dat4s_core.validator.validator as dtsValidator
+import dat4s_core.widget.wx_widget as dtsWidget
+import dat4s_core.widget.wx_window as dtsWindow
 
 import config.config as config
 import gui.pane as pstPane
@@ -53,6 +58,8 @@ class GeneTab(wx.Panel, pstWidget.UserInput):
 
 		Attributes
 		----------
+		parent : wx widget or None
+			Parent of the tab
 
 	"""
 	#region --------------------------------------------------> Instance setup
@@ -73,7 +80,7 @@ class GeneTab(wx.Panel, pstWidget.UserInput):
 			self.sbFile,
 			btnLabel  = config.label['Gene']['FastaFile'],
 			tcHint    = config.hint['Gene']['FastaFile'],
-			ext       = config.extLong['Data'],
+			ext       = config.extLong['Seq'],
 			validator = dtsValidator.IsNotEmpty(
 				parent,
 				config.msg['Error']['Gene']['FastaFile'],
@@ -185,7 +192,7 @@ class GeneTab(wx.Panel, pstWidget.UserInput):
 
 		#region ----------------------------> Test & Default production values
 		if config.development:
-			self.fastaFile.tc.SetValue("/Users/bravo/Dropbox/SOFTWARE-DEVELOPMENT/APPS/PEPTIDE_SEARCH_TOOLS/LOCAL/DATA/NEW-DATA/HUMAN_ref_Jan2019-cut-long.fasta")
+			self.fastaFile.tc.SetValue("/Users/bravo/Dropbox/SOFTWARE-DEVELOPMENT/APPS/PEPTIDE_SEARCH_TOOLS/LOCAL/DATA/NEW-DATA/HUMAN_ref_Jan2019.fasta")
 			self.geneFile.tc.SetValue("/Users/bravo/Dropbox/SOFTWARE-DEVELOPMENT/APPS/PEPTIDE_SEARCH_TOOLS/LOCAL/DATA/NEW-DATA/XIAP_GeneNAMES.txt")
 			self.outFile.tc.SetValue("/Users/bravo/TEMP-GUI/BORRAR-PeptideSearchTools/gene-out.txt")
 			self.residueExtract.tc.SetValue("5 10 20 50")
@@ -194,6 +201,249 @@ class GeneTab(wx.Panel, pstWidget.UserInput):
 		#endregion -------------------------> Test & Default production values
 	#---
 	#endregion -----------------------------------------------> Instance setup
+
+	#region ---------------------------------------------------> Class methods
+	def CheckInput(self):
+		"""Chek user input. Overrides BaseTab.CheckInput"""
+		#region ---------------------------------------------------------> Msg
+		msgM = config.msg['Step']['Check']
+		#endregion ------------------------------------------------------> Msg
+		
+		#region -------------------------------------------> Individual Fields
+		msg = f"{msgM}: {config.label['Gene']['FastaFile']}"
+		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
+		if self.fastaFile.tc.GetValidator().Validate(self):
+			pass
+		else:
+			return False
+
+		msg = f"{msgM}: {config.label['Gene']['GeneFile']}"
+		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
+		if self.geneFile.tc.GetValidator().Validate(self):
+			pass
+		else:
+			return False
+
+		msg = f"{msgM}: {config.label['Gene']['OutFile']}"
+		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
+		if self.outFile.tc.GetValidator().Validate(self):
+			pass
+		else:
+			return False
+
+		msg = f"{msgM}: {config.label['Gene']['ResidueExtract']}"
+		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
+		if self.residueExtract.tc.GetValidator().Validate(self):
+			pass
+		else:
+			return False
+		#endregion ----------------------------------------> Individual Fields
+
+		#region ------------------------------------------------> File content
+		#--> Gene names
+		self.gFile    = self.geneFile.tc.GetValue()
+		self.geneList = []
+		with open(self.gFile, 'r') as gFile:
+			for line in gFile:
+				g = "".join(line.split())
+				g = g.replace('"', "")
+				if g == '':
+					continue
+				else:
+					pass
+				self.geneList.append(g)
+				if ";" in g:
+					[self.geneList.append(x) for x in g.split(";")]
+				else:
+					pass
+		if not self.geneList:
+			msg = config.error['Gene']['NoGene']
+			dtsWindow.MessageDialog('errorF', msg, parent=self.parent)
+			return False
+		else:
+			pass
+		#---
+		#endregion ---------------------------------------------> File content
+
+		return True
+	#---
+
+	def PrepareRun(self):
+		"""Prepare the run """
+		#region ---------------------------------------------------------> Msg
+		msg = config.msg['Step']['Prepare']
+		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
+		#endregion ------------------------------------------------------> Msg
+
+		#region -----------------------------------------------------> Prepare
+		# Gene associated variables set in CheckInput since it is necesary to 
+		# Check Gene file content
+		#--> Input values
+		self.fFile  = self.fastaFile.tc.GetValue()
+		self.oFile  = self.outFile.tc.GetValue()
+		self.resExt = list(
+			map(
+				int, 
+				self.residueExtract.tc.GetValue().split()
+			)
+		)
+		resExtStr = " ".join(self.residueExtract.tc.GetValue().split())
+		#---
+		#--> Needed for the analysis
+		self.ltotal    = 0
+		self.lempty    = 0
+		self.prottotal = 0
+		self.protsselT = 0
+		self.searchP   = False
+		self.dataO     = []
+		#---
+		#--> For output
+		self.d = {
+			config.label['Gene']['FastaFile']     : self.fFile,
+			config.label['Gene']['GeneFile']      : self.gFile,
+			config.label['Gene']['OutFile']       : self.oFile,
+			config.label['Gene']['ResidueExtract']: resExtStr,
+		}
+		#---
+		#endregion --------------------------------------------------> Prepare
+		
+		return True
+	#---
+
+	def RunAnalysis(self):
+		"""Run the analysis"""
+		#region ---------------------------------------------------------> Msg
+		msg = config.msg['Step']['Run']
+		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
+		#endregion ------------------------------------------------------> Msg
+
+		#region -----------------------------------------------------> Process
+		with open(self.fFile, 'r') as File:
+			for line in File:
+				self.ltotal += 1
+				#--> Remove new line characters and strip line
+				l = dtsStr.Str2List(line, strip='b')[0]
+				#--> Discard empty lines
+				if l == '':
+					self.lempty += 1
+				#--> Process line containing a fasta header
+				elif l[0] == '>':
+					self.prottotal += 1
+					#--> Finish processing of previous sequence
+					if self.searchP:
+						lseq = ''.join(lseq)
+						for i in self.resExt:
+							ltemp.append(lseq[0:i])
+						self.dataO.append(ltemp)
+					else:
+						pass
+					#--> Setup analysis of a new protein
+					if 'GN=' in l:
+						tGene = [s for s in l.split() if 'GN=' in s][0].split('=')[1]
+						if tGene in self.geneList:
+							self.searchP = True
+							self.protsselT += 1
+							ltemp = []
+							lseq = []
+							ltemp.append(tGene)
+							ltemp.append(l.split('|')[1])
+						else:
+							self.searchP = False
+					else:
+						self.searchP = False
+				#--> Process line containing a sequence line
+				else:
+					if self.searchP:
+						lseq.append(l)
+					else:
+						pass
+				#--> Update statusbar
+				if not self.ltotal % 100:
+					msg = (
+						f"Analysing --> Total lines: {self.ltotal}, "
+						f"Empty lines: {self.lempty}, "
+						f"Total Proteins: {self.prottotal}, "
+						f"Matched Proteins:  {self.protsselT}"
+					)
+					wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
+				else:
+					pass
+		#--> Last pass to catch the last protein
+		if self.searchP:
+			lseq = ''.join(lseq)
+			for i in self.resExt:
+				ltemp.append(lseq[0:i])
+			self.dataO.append(ltemp)
+		else:
+			pass
+		#---
+		#endregion --------------------------------------------------> Process
+
+		return True
+	#---
+
+	def WriteOutput(self):
+		""" Write the output """
+		#region ---------------------------------------------------------> Msg
+		msg = config.msg['Step']['Output']
+		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
+		#endregion ------------------------------------------------------> Msg
+
+		#region ---------------------------> Check there is something to write	
+		if self.protsselT == 0:
+			msg = config.msg['Error']['Gene']['NoProtFound']
+			dtsWindow.MessageDialog('errorF', msg, self)
+			return False
+		else:
+			pass
+		#endregion ------------------------> Check there is something to write	
+
+		# #region -------------------------------------------------------> Write
+		#--> Write input data
+		oFile = open(self.oFile, 'w')
+		oFile.write('Input data:\n')
+		dtsFF.WriteDict2File(oFile, self.d)
+		oFile.write('\n')
+		#---
+		#--> Write output
+		oFile.write('Output data:\n')
+		header = 'Gene\tProtein\t' + "\t".join(['1-'+str(x) for x in self.resExt])
+		oFile.write(header+'\n')
+
+		self.dataO.sort(key=itemgetter(0, 1))
+		dtsFF.WriteList2File(oFile, self.dataO)
+		oFile.write('\n')
+		#---
+		#--> File last line
+		dtsFF.WriteLastLine2File(oFile, config.title['MainW'])
+		#---
+	 	#--> Close file and final summary in statusbar
+		oFile.close()
+		msg = (
+			f"Final count --> Total lines: {self.ltotal}, "
+			f"Empty lines: {self.lempty}, "
+			f"Total Proteins: {self.prottotal}, "
+			f"Matched Proteins:  {self.protsselT}"
+		)
+		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
+		#---
+		# #endregion ----------------------------------------------------> Write
+
+		return True
+	#---
+
+	def RunEnd(self):
+		""""""
+		if self.RunEnd:
+			#--> Remove value of Output File to avoid overwriting it
+			self.outFile.tc.SetValue("")
+		else:
+			pass
+		#--> Standard ending 
+		super().RunEnd()
+		#---
+	#---
+	#endregion ------------------------------------------------> Class methods
 #---
 
 class PeptideTab(wx.Panel):
