@@ -65,7 +65,8 @@ else:
 #region ----------------------------------------------------> Names and titles
 name = { # Unique names to identify windows/objects through the config file
 	'Window': { #--> Main windows
-		'MainW' : 'MainW',
+		'MainW'   : 'MainW',
+		'ConsConf': 'ConsConf',
 	},
 	'Tab' : { #--> Tab for notebook windows
 		'PeptS' : 'PeptS',
@@ -82,7 +83,8 @@ name = { # Unique names to identify windows/objects through the config file
 
 title = { # Title of windows, tabs and panes
 	#--> Window
-	'MainW' : f'Peptide Search Tools {version}',
+	'MainW'   : f'Peptide Search Tools {version}',
+	'ConsConf': 'Consensus sequence configuration',
 	#--> Tab
 	'PeptS' : 'Peptide.txt',
 	'Gene'  : 'Gene.fasta',
@@ -109,8 +111,11 @@ file = { # Location of important files
 #region ---------------------------------------------------------------> Sizes
 size = { # Base size for widgets
 	'MainW' : (900, 480),
-	'ListCtrl' : {
+	'ListCtrl' : { # wx.ListCtrl
 		'Peptide' : (50, 150),
+	},
+	'ScrolledW' : { # wx.ScrolledWindow
+		'ConsConf' : (640, 300),
 	},
 }
 #endregion ------------------------------------------------------------> Sizes
@@ -152,6 +157,10 @@ label = { # Label for wx.Buttons, wx.StaticText, etc
 		'OutFile'  : 'Output File',
 		'PosAA'    : "Positions && AAs",       # && Needed for wxPython
 		'CompProt' : 'Only complete proteins',
+	},
+	'ConsensusConf' : { # gui.window.ConsensusConf
+		'Number' : 'Number of positions',
+		'Create' : 'Create fields',
 	},
 }
 #endregion -----------------------------------------------------------> Labels

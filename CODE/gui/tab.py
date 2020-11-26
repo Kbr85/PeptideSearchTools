@@ -39,6 +39,7 @@ import dat4s_core.widget.wx_window as dtsWindow
 import config.config as config
 import gui.pane as pstPane
 import gui.widget as pstWidget
+import gui.window as pstWindow
 #endregion ----------------------------------------------------------- Imports
 
 
@@ -189,6 +190,10 @@ class ConsensusTab(wx.Panel, pstWidget.UserInput):
 		self.Sizer.Fit(self)
 		#endregion ---------------------------------------------------> Sizers
 
+		#region --------------------------------------------------------> Bind
+		self.posAA.btn.Bind(wx.EVT_BUTTON, self.OnPosAA)
+		#endregion -----------------------------------------------------> Bind
+
 		#region ----------------------------> Test & Default production values
 		if config.development:
 			self.fastaFile.tc.SetValue("/Users/bravo/Dropbox/SOFTWARE-DEVELOPMENT/APPS/PEPTIDE_SEARCH_TOOLS/LOCAL/DATA/NEW-DATA/HUMAN_ref_Jan2019.fasta")
@@ -199,6 +204,23 @@ class ConsensusTab(wx.Panel, pstWidget.UserInput):
 		#endregion -------------------------> Test & Default production values
 	#---
 	#endregion -----------------------------------------------> Instance setup
+
+	#region ---------------------------------------------------> Class methods
+	def OnPosAA(self, event):
+		"""Launch the configuration window to set the postions and the AAs
+		
+			Parameters
+			----------
+			event : wx.Event
+				Information about the event
+		"""
+		with pstWindow.ConsensusConf(parent=self.parent) as dlg:
+			if dlg.ShowModal() == wx.ID_OK:
+				print("Ok")
+			else:
+				print("Cancel")
+	#---
+	#endregion ------------------------------------------------> Class methods
 #---
 
 class GeneTab(wx.Panel, pstWidget.UserInput):
@@ -271,7 +293,9 @@ class GeneTab(wx.Panel, pstWidget.UserInput):
 			validator = dtsValidator.NumberList(
 				parent,
 				config.msg['Error']['Gene']['ResidueExtract'],
+				isList = True,
 				refMin = 1,
+
 			),
 		)
 		#endregion --------------------------------------------------> Widgets
@@ -590,7 +614,7 @@ class GeneTab(wx.Panel, pstWidget.UserInput):
 
 	def RunEnd(self):
 		""""""
-		if self.RunEnd:
+		if self.runEnd:
 			#--> Remove value of Output File to avoid overwriting it
 			self.outFile.tc.SetValue("")
 		else:

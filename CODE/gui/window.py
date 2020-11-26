@@ -28,6 +28,7 @@
 import wx
 import wx.lib.agw.aui as aui
 
+import dat4s_core.widget.wx_widget as dtsWidget
 import dat4s_core.widget.wx_window as dtsWindow
 
 import config.config as config
@@ -157,5 +158,73 @@ class MainWindow(wx.Frame):
 			self.notebook.SetSelection(self.notebook.GetPageIndex(win))
 	#---
 	#endregion -------------------------------------------------> Menu methods
+#---
+
+class ConsensusConf(wx.Dialog):
+	"""Window to configure the consensus search 
+	
+		Parameters
+		----------
+		parent : wx widget
+			Parent of the window
+		title : str
+			Title of the window
+
+		Attributes
+		----------
+		parent : wx widget
+			Parent of the window 
+	"""
+	#region --------------------------------------------------> Instance setup
+	def __init__(self, parent, title=None):
+		""""""
+		#region -----------------------------------------------> Initial setup
+		self.parent = parent
+		tTitle = config.title['ConsConf'] if title is None else title
+		style = wx.CAPTION|wx.CLOSE_BOX|wx.RESIZE_BORDER
+
+		super().__init__(parent, title=tTitle, style=style)
+		#region -----------------------------------------------> Initial setup
+
+		#region -----------------------------------------------------> Widgets
+		self.nRes = dtsWidget.StaticTextCtrlButton(
+			self,
+			setSizer = True,
+		)
+		self.swMatrix = wx.ScrolledWindow(
+			self, 
+			size = config.size['ScrolledW']['ConsConf'],
+		)
+		self.swMatrix.SetBackgroundColour('WHITE')
+		#endregion --------------------------------------------------> Widgets
+		#region ------------------------------------------------------> Sizers
+		self.btnSizer = self.CreateStdDialogButtonSizer(
+			wx.OK|wx.CANCEL
+		)
+		self.Sizer = wx.FlexGridSizer(3, 1, 1, 1)
+		self.Sizer.Add(
+			self.nRes.Sizer,
+			border = 5,
+			flag   = wx.ALIGN_CENTER|wx.ALL,
+		)
+		self.Sizer.Add(
+			self.swMatrix,
+			border = 5,
+			flag   = wx.EXPAND|wx.ALL,
+		)
+		self.Sizer.Add(
+			self.btnSizer,
+			border = 5,
+			flag   = wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.ALL
+		)
+		self.Sizer.AddGrowableCol(0, 1)
+		self.Sizer.AddGrowableRow(1, 1)
+		self.SetSizer(self.Sizer)
+		self.Sizer.Fit(self)
+		#endregion ---------------------------------------------------> Sizers
+
+		self.CenterOnParent()
+	#---
+	#endregion -----------------------------------------------> Instance setup
 #---
 #endregion ----------------------------------------------------------> Classes

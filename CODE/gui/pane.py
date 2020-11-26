@@ -136,6 +136,7 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 			validator = dtsValidator.NumberList(
 				parent,
 				config.msg['Error']['Peptide']['ColExtract'],
+				isList = True,
 				refMin = 0,
 			),
 		)
@@ -436,7 +437,7 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 
 	def RunEnd(self):
 		""""""
-		if self.RunEnd:
+		if self.runEnd:
 			#--> Remove value of Output File to avoid overwriting it
 			self.outFile.tc.SetValue("")
 		else:
