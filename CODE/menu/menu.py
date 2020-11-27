@@ -73,9 +73,9 @@ class SearchMenu(wx.Menu, MenuMethods):
 
 	#region -----------------------------------------------------> Class setup
 	tab = {
-		1 : config.name['Tab']['PeptS'],
+		1 : config.name['Tab']['Peptide'],
 		2 : config.name['Tab']['Gene'],
-		3 : config.name['Tab']['SeqSet'],
+		3 : config.name['Tab']['Consensus'],
 	}
 	#endregion --------------------------------------------------> Class setup
 	
@@ -87,9 +87,9 @@ class SearchMenu(wx.Menu, MenuMethods):
 	 	#endregion --------------------------------------------> Initial setup
 
 		#region --------------------------------------------------> Menu items
-		self.Append(1, config.title['PeptS']+'\tAlt+Ctrl+P')
+		self.Append(1, config.title['Peptide']+'\tAlt+Ctrl+P')
 		self.Append(2, config.title['Gene']+'\tAlt+Ctrl+G')
-		self.Append(3, config.title['SeqSet']+'\tAlt+Ctrl+C')
+		self.Append(3, config.title['Consensus']+'\tAlt+Ctrl+C')
 		#endregion -----------------------------------------------> Menu items
 
 		#region --------------------------------------------------------> Bind

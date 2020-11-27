@@ -65,15 +65,15 @@ else:
 #region ----------------------------------------------------> Names and titles
 name = { # Unique names to identify windows/objects through the config file
 	'Window': { #--> Main windows
-		'MainW'   : 'MainW',
-		'ConsConf': 'ConsConf',
+		'MainW'        : 'MainW',
+		'ConsensusConf': 'ConsensusConf',
 	},
 	'Tab' : { #--> Tab for notebook windows
-		'PeptS' : 'PeptS',
-		'Gene'  : 'Gene',
-		'SeqSet': 'SeqSet',
-		'LicAgr': 'LicAgr',
-		'Help'  : 'Help',
+		'Peptide'  : 'Peptide',
+		'Gene'     : 'Gene',
+		'Consensus': 'Consensus',
+		'LicAgr'   : 'LicAgr',
+		'Help'     : 'Help',
 	},
 	'Panes' : {#--> Panes
 		'UserInput' : 'UserInput',
@@ -86,11 +86,11 @@ title = { # Title of windows, tabs and panes
 	'MainW'   : f'Peptide Search Tools {version}',
 	'ConsConf': 'Consensus sequence configuration',
 	#--> Tab
-	'PeptS' : 'Peptide.txt',
-	'Gene'  : 'Gene.fasta',
-	'SeqSet': 'Consensus',
-	'LicAgr': 'License Agreement',
-	'Help'  : 'Quick help',
+	'Peptide'  : 'Peptide.txt',
+	'Gene'     : 'Gene.fasta',
+	'Consensus': 'Consensus',
+	'LicAgr'   : 'License Agreement',
+	'Help'     : 'Quick help',
 	#--> Pane
 	'UserInput' : 'User input',
 	'ListCtrl'  : 'Columns in the main input file',
@@ -115,7 +115,13 @@ size = { # Base size for widgets
 		'Peptide' : (50, 150),
 	},
 	'ScrolledW' : { # wx.ScrolledWindow
-		'ConsConf' : (640, 300),
+		'ConsensusConf' : (450, 200),
+	},
+	'TextCtrl' : { # wx.TextCtrl
+		'ConsensusConf' : { # gui.window.ConsensusConf
+			'Residue': (115,22),
+			'AA'     : (200, 22),
+		},
 	},
 }
 #endregion ------------------------------------------------------------> Sizes
@@ -126,6 +132,14 @@ extLong = { # string for the dlg windows representing the extension of the files
 	'Seq' : 'txt fasta files (*.txt; *.fasta)|*.txt;*.fasta',
 }
 #endregion -------------------------------------------------------> Extensions
+
+#region -----------------------------------------------------------> Dict Keys
+dictKey = { # Import dict keys
+	'ConsensusConf' : { # gui.window.ConsensusConf
+		'PosKey' : 'Pos',
+	},
+}
+#endregion --------------------------------------------------------> Dict Keys
 
 #region --------------------------------------------------------------> Labels
 label = { # Label for wx.Buttons, wx.StaticText, etc
@@ -194,7 +208,7 @@ hint = { # Hint for wx.TextCtrl
 		'OutFile'  : f"Path to the {label['Consensus']['OutFile']}.",
 		'PosAA'    : (
 			f"Dictionary e.g. {{2: 'A W', 3: 'S T', 4: 'I A', 'Pos': True}} "
-			f"with the positions to analyse and the AA to search for."),
+			f"with the positions to analyse and the AAs to search for."),
 	},
 }
 #endregion ------------------------------------------------------------> Hints
@@ -255,6 +269,12 @@ msg = { # Messages for the user
 			'OutFile' : (
 				f"Select the path to the {label['Consensus']['OutFile']}."),
 			'PosAA' : f"",
+		},
+		'ConsensusConf' : {
+			'Number' : (
+				f"Only a positive integer can be accepted in "
+				f"{label['ConsensusConf']['Number']}."),
+			'PosAA' : f"Define the {label['Consensus']['PosAA']} to analyse.",
 		},
 	},
 }

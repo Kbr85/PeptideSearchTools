@@ -25,9 +25,12 @@
 """
 
 #region -------------------------------------------------------------- Imports
+import ast
+
 import wx
 import wx.lib.agw.aui as aui
 
+import dat4s_core.validator.validator as dtsValidator
 import dat4s_core.widget.wx_widget as dtsWidget
 import dat4s_core.widget.wx_window as dtsWindow
 
@@ -66,11 +69,11 @@ class MainWindow(wx.Frame):
 		self.name = config.name['Window']['MainW']
 
 		self.tabMethods = {
-			'PeptS' : pstTab.PeptideTab,
-			'Gene'  : pstTab.GeneTab,
-			'SeqSet': pstTab.ConsensusTab,
-			'LicAgr': dtsWindow.TxtContentWin,
-			'Help'  : dtsWindow.TxtContentWin,
+			'Peptide'  : pstTab.PeptideTab,
+			'Gene'     : pstTab.GeneTab,
+			'Consensus': pstTab.ConsensusTab,
+			'LicAgr'   : dtsWindow.TxtContentWin,
+			'Help'     : dtsWindow.TxtContentWin,
 		}
 
 		super().__init__(
@@ -167,6 +170,8 @@ class ConsensusConf(wx.Dialog):
 		----------
 		parent : wx widget
 			Parent of the window
+		name : str
+			To id the window and its elements
 		title : str
 			Title of the window
 
@@ -174,14 +179,27 @@ class ConsensusConf(wx.Dialog):
 		----------
 		parent : wx widget
 			Parent of the window 
+		name : str
+			To id the window and its elements
+		nRes : dts.Widget.StaticTextCtrlButton
+			Create field widgets
+		swMatrix : wx.ScrolledWindow
+			Region to contain the fields
+		btnSizer : wx.Sizer
+			Sizer with the Cancel/Ok buttons
+		swSizer : wx.FlexGridSizer
+			Sizer for the fields
+		Sizer : wx.FlexGridSizer
+			Main sizer of the window
 	"""
 	#region --------------------------------------------------> Instance setup
-	def __init__(self, parent, title=None):
+	def __init__(self, parent, name, title=None):
 		""""""
 		#region -----------------------------------------------> Initial setup
 		self.parent = parent
+		self.name   = name
 		tTitle = config.title['ConsConf'] if title is None else title
-		style = wx.CAPTION|wx.CLOSE_BOX|wx.RESIZE_BORDER
+		style  = wx.CAPTION|wx.CLOSE_BOX|wx.RESIZE_BORDER
 
 		super().__init__(parent, title=tTitle, style=style)
 		#region -----------------------------------------------> Initial setup
@@ -189,18 +207,32 @@ class ConsensusConf(wx.Dialog):
 		#region -----------------------------------------------------> Widgets
 		self.nRes = dtsWidget.StaticTextCtrlButton(
 			self,
-			setSizer = True,
+			setSizer  = True,
+			stLabel   = config.label[name]['Number'],
+			btnLabel  = config.label[name]['Create'],
+			validator = dtsValidator.NumberList(
+				self,
+				config.msg['Error'][name]['Number'],
+				refMin = 1,
+			),
 		)
 		self.swMatrix = wx.ScrolledWindow(
 			self, 
-			size = config.size['ScrolledW']['ConsConf'],
+			size = config.size['ScrolledW'][name],
 		)
 		self.swMatrix.SetBackgroundColour('WHITE')
 		#endregion --------------------------------------------------> Widgets
+		
 		#region ------------------------------------------------------> Sizers
+		#--> Button Sizers
 		self.btnSizer = self.CreateStdDialogButtonSizer(
 			wx.OK|wx.CANCEL
 		)
+		#--> Field sizer
+		self.swSizer = wx.FlexGridSizer(1,3,1,1)
+		self.swMatrix.SetSizer(self.swSizer)
+		self.swSizer.AddGrowableCol(2, 1)
+		#--> Main sizer
 		self.Sizer = wx.FlexGridSizer(3, 1, 1, 1)
 		self.Sizer.Add(
 			self.nRes.Sizer,
@@ -217,14 +249,154 @@ class ConsensusConf(wx.Dialog):
 			border = 5,
 			flag   = wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM|wx.ALL
 		)
+		#-->
 		self.Sizer.AddGrowableCol(0, 1)
 		self.Sizer.AddGrowableRow(1, 1)
 		self.SetSizer(self.Sizer)
 		self.Sizer.Fit(self)
 		#endregion ---------------------------------------------------> Sizers
 
+		#region ----------------------------------------------------> Position
 		self.CenterOnParent()
+		#endregion -------------------------------------------------> Position
+
+		#region --------------------------------------------------------> Bind
+		self.nRes.btn.Bind(wx.EVT_BUTTON, self.OnCreate)
+		#endregion -----------------------------------------------------> Bind
+
+		#region ----------------------------------------------> Initial Values
+		self.OnInitVal()
+		#endregion -------------------------------------------> Initial Values
 	#---
 	#endregion -----------------------------------------------> Instance setup
+
+	#region ---------------------------------------------------> Class methods
+	def OnInitVal(self):
+		"""Fill the fields in the window if parent.posAA is not empty """
+		#region -------------------------------> Get string from parent window
+		tStr = self.parent.posAA.tc.GetValue()
+		#endregion ----------------------------> Get string from parent window
+		
+		#region ----------------------------------------> Create & fill fields
+		if tStr == '':
+			return False
+		else:
+			tDict = ast.literal_eval(tStr)
+			#--> To exclude the position key
+			NRow = len(tDict) - 1
+			Pos = tDict[config.dictKey[self.name]['PosKey']]
+			#--> Create fields
+			self.nRes.tc.SetValue(str(NRow))
+			self.OnCreate('event')
+			#--> Fill fields
+			for i, (k, v) in enumerate(tDict.items(), start=1):
+				if k != config.dictKey[self.name]['PosKey']:
+					self.tcAAList[i].SetValue(v)
+					if Pos:
+						self.tcPosList[i].SetValue(str(k))
+					else:
+						pass
+			#-->
+			return True
+		#endregion -------------------------------------> Create & fill fields
+	#---
+
+	def OnCreate(self, event):
+		"""Create the fields for configuring the positions 
+
+			Parameters
+			----------
+			event : wx.Event
+				Information about the event
+		"""
+	 	#region ----------------------------------------------------> Validate
+		if self.nRes.tc.GetValidator().Validate(self):
+			pass
+		else:
+			return False
+		#endregion -------------------------------------------------> Validate
+
+		#region ---------------------------------------------------> Variables
+		self.nRow = int(self.nRes.tc.GetValue())
+		self.tcAAList   = []
+		self.tcPosList  = []
+		self.stPosList  = []
+		#endregion ------------------------------------------------> Variables
+
+		#region -----------------------------------------------> Create fields
+		#--> Create the header
+		self.stPosList.append(wx.StaticText(
+			self.swMatrix,
+			label='Position',
+			)
+		)
+		self.tcPosList.append(wx.StaticText(
+			self.swMatrix,
+			label='Residue number',
+			)
+		)
+		self.tcAAList.append(wx.StaticText(
+			self.swMatrix,
+			label='Amino acids',
+			)
+		)
+		#--> Create the fields
+		for a in range(self.nRow):
+			self.stPosList.append(wx.StaticText(
+				self.swMatrix,
+				label = str(a+1),
+				)
+			)
+			self.tcPosList.append(wx.TextCtrl(
+				self.swMatrix,
+				size  = config.size['TextCtrl'][self.name]['Residue'],
+				style = wx.TE_CENTRE,
+				)
+			)
+			self.tcAAList.append(wx.TextCtrl(
+				self.swMatrix,
+				size = config.size['TextCtrl'][self.name]['AA'],
+				)
+			)
+		#endregion --------------------------------------------> Create fields
+
+		#region ------------------------------------------------------> Sizers
+		#--> Delete old
+		self.swSizer.Clear(delete_windows=True)
+		#--> Update number of rows in the sizer. +1 because of the header
+		self.swSizer.SetRows(self.nRow+1)
+		#--> Add
+		for k, v in enumerate(self.tcAAList):
+			#--> Extra border to separate the header from the fields
+			if k > 0:
+				border = 2
+				flagAA = wx.EXPAND|wx.ALL
+			else:
+				flagAA = wx.ALIGN_CENTER|wx.ALL
+				border = 5
+			#--> Add
+			self.swSizer.Add(
+				self.stPosList[k],
+				flag   = wx.ALIGN_CENTER|wx.ALL,
+				border = border,
+			)
+			self.swSizer.Add(
+				self.tcPosList[k],
+				flag   = wx.ALIGN_CENTER|wx.ALL,
+				border = border,
+			)
+			self.swSizer.Add(
+				v,
+				flag   = flagAA,
+				border = border,
+		)
+		#--> Fit Sizer
+		self.swSizer.FitInside(self.swMatrix)
+	 	#--> Adjust the size of the scrolled window
+		self.swMatrix.SetVirtualSize(self.swSizer.GetSize())
+		self.swMatrix.SetScrollRate(20,20)
+		#endregion ---------------------------------------------------> Sizers
+	#---
+	#endregion ------------------------------------------------> Class methods
 #---
 #endregion ----------------------------------------------------------> Classes

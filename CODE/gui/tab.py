@@ -61,12 +61,15 @@ class ConsensusTab(wx.Panel, pstWidget.UserInput):
 		----------
 		parent : wx widget or None
 			Parent of the tab
+		name : str
+			To id the tab and its elements
 	"""
 	#region --------------------------------------------------> Instance setup
 	def __init__(self, parent, name, statusbar):
 		""""""
 		#region -----------------------------------------------> Initial setup
 		self.parent = parent
+		self.name   = name
 
 		wx.Panel.__init__(self, parent, name=name)
 		pstWidget.UserInput.__init__(self, self)
@@ -78,38 +81,38 @@ class ConsensusTab(wx.Panel, pstWidget.UserInput):
 		#--> wx.Button & wx.TextCtrl
 		self.fastaFile = dtsWidget.ButtonTextCtrlFF(
 			self.sbFile,
-			btnLabel  = config.label['Consensus']['FastaFile'],
-			tcHint    = config.hint['Consensus']['FastaFile'],
+			btnLabel  = config.label[name]['FastaFile'],
+			tcHint    = config.hint[name]['FastaFile'],
 			ext       = config.extLong['Seq'],
 			validator = dtsValidator.IsNotEmpty(
 				parent,
-				config.msg['Error']['Consensus']['FastaFile'],
+				config.msg['Error'][name]['FastaFile'],
 			),
 		)
 		self.outFile = dtsWidget.ButtonTextCtrlFF(
 			self.sbFile,
-			btnLabel  = config.label['Consensus']['OutFile'],
-			tcHint    = config.hint['Consensus']['OutFile'],
+			btnLabel  = config.label[name]['OutFile'],
+			tcHint    = config.hint[name]['OutFile'],
 			ext       = config.extLong['Data'],
 			mode      = 'save',
 			validator = dtsValidator.IsNotEmpty(
 				parent,
-				config.msg['Error']['Consensus']['OutFile'],
+				config.msg['Error'][name]['OutFile'],
 			),
 		)
 		self.posAA = dtsWidget.ButtonTextCtrl(
 			self.sbValue,
-			btnLabel  = config.label['Consensus']['PosAA'],
-			tcHint    = config.hint['Consensus']['PosAA'],
+			btnLabel  = config.label[name]['PosAA'],
+			tcHint    = config.hint[name]['PosAA'],
 			validator = dtsValidator.IsNotEmpty(
 				parent,
-				config.msg['Error']['Consensus']['OutFile'],
+				config.msg['Error'][name]['PosAA'],
 			),
 		)
 		#--> CheckBox
 		self.cbCompProt = wx.CheckBox(
 			self.sbValue,
-			label = config.label['Consensus']['CompProt'],
+			label = config.label[name]['CompProt'],
 		)
 		#endregion --------------------------------------------------> Widgets
 
@@ -214,11 +217,11 @@ class ConsensusTab(wx.Panel, pstWidget.UserInput):
 			event : wx.Event
 				Information about the event
 		"""
-		with pstWindow.ConsensusConf(parent=self.parent) as dlg:
+		with pstWindow.ConsensusConf(self, 'ConsensusConf') as dlg:
 			if dlg.ShowModal() == wx.ID_OK:
-				print("Ok")
+				pass
 			else:
-				print("Cancel")
+				pass
 	#---
 	#endregion ------------------------------------------------> Class methods
 #---
@@ -239,12 +242,15 @@ class GeneTab(wx.Panel, pstWidget.UserInput):
 		----------
 		parent : wx widget or None
 			Parent of the tab
+		name : str
+			To identify the tab
 	"""
 	#region --------------------------------------------------> Instance setup
 	def __init__(self, parent, name, statusbar):
 		""""""
 		#region -----------------------------------------------> Initial setup
 		self.parent = parent
+		self.name   = name
 
 		wx.Panel.__init__(self, parent, name=name)
 		pstWidget.UserInput.__init__(self, self)
@@ -256,43 +262,43 @@ class GeneTab(wx.Panel, pstWidget.UserInput):
 		#--> wx.Button & wx.TextCtrl
 		self.fastaFile = dtsWidget.ButtonTextCtrlFF(
 			self.sbFile,
-			btnLabel  = config.label['Gene']['FastaFile'],
-			tcHint    = config.hint['Gene']['FastaFile'],
+			btnLabel  = config.label[name]['FastaFile'],
+			tcHint    = config.hint[name]['FastaFile'],
 			ext       = config.extLong['Seq'],
 			validator = dtsValidator.IsNotEmpty(
 				parent,
-				config.msg['Error']['Gene']['FastaFile'],
+				config.msg['Error'][name]['FastaFile'],
 			),
 		)
 		self.geneFile = dtsWidget.ButtonTextCtrlFF(
 			self.sbFile,
-			btnLabel  = config.label['Gene']['GeneFile'],
-			tcHint    = config.hint['Gene']['GeneFile'],
+			btnLabel  = config.label[name]['GeneFile'],
+			tcHint    = config.hint[name]['GeneFile'],
 			ext       = config.extLong['Data'],
 			validator = dtsValidator.IsNotEmpty(
 				parent,
-				config.msg['Error']['Gene']['GeneFile'],
+				config.msg['Error'][name]['GeneFile'],
 			),
 		)		
 		self.outFile = dtsWidget.ButtonTextCtrlFF(
 			self.sbFile,
-			btnLabel  = config.label['Gene']['OutFile'],
-			tcHint    = config.hint['Gene']['OutFile'],
+			btnLabel  = config.label[name]['OutFile'],
+			tcHint    = config.hint[name]['OutFile'],
 			ext       = config.extLong['Data'],
 			mode      = 'save',
 			validator = dtsValidator.IsNotEmpty(
 				parent,
-				config.msg['Error']['Gene']['OutFile'],
+				config.msg['Error'][name]['OutFile'],
 			),
 		)
 		#--> wx.StaticText & wx.TextCtrl
 		self.residueExtract = dtsWidget.StaticTextCtrl(
 			self.sbValue,
-			stLabel   = config.label['Gene']['ResidueExtract'],
-			tcHint    = config.hint['Gene']['ResidueExtract'],
+			stLabel   = config.label[name]['ResidueExtract'],
+			tcHint    = config.hint[name]['ResidueExtract'],
 			validator = dtsValidator.NumberList(
 				parent,
-				config.msg['Error']['Gene']['ResidueExtract'],
+				config.msg['Error'][name]['ResidueExtract'],
 				isList = True,
 				refMin = 1,
 
@@ -390,28 +396,28 @@ class GeneTab(wx.Panel, pstWidget.UserInput):
 		#endregion ------------------------------------------------------> Msg
 		
 		#region -------------------------------------------> Individual Fields
-		msg = f"{msgM}: {config.label['Gene']['FastaFile']}"
+		msg = f"{msgM}: {config.label[self.name]['FastaFile']}"
 		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
 		if self.fastaFile.tc.GetValidator().Validate(self):
 			pass
 		else:
 			return False
 
-		msg = f"{msgM}: {config.label['Gene']['GeneFile']}"
+		msg = f"{msgM}: {config.label[self.name]['GeneFile']}"
 		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
 		if self.geneFile.tc.GetValidator().Validate(self):
 			pass
 		else:
 			return False
 
-		msg = f"{msgM}: {config.label['Gene']['OutFile']}"
+		msg = f"{msgM}: {config.label[self.name]['OutFile']}"
 		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
 		if self.outFile.tc.GetValidator().Validate(self):
 			pass
 		else:
 			return False
 
-		msg = f"{msgM}: {config.label['Gene']['ResidueExtract']}"
+		msg = f"{msgM}: {config.label[self.name]['ResidueExtract']}"
 		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
 		if self.residueExtract.tc.GetValidator().Validate(self):
 			pass
@@ -437,7 +443,7 @@ class GeneTab(wx.Panel, pstWidget.UserInput):
 				else:
 					pass
 		if not self.geneList:
-			msg = config.error['Gene']['NoGene']
+			msg = config.error[self.name]['NoGene']
 			dtsWindow.MessageDialog('errorF', msg, parent=self.parent)
 			return False
 		else:
@@ -479,10 +485,10 @@ class GeneTab(wx.Panel, pstWidget.UserInput):
 		#---
 		#--> For output
 		self.d = {
-			config.label['Gene']['FastaFile']     : self.fFile,
-			config.label['Gene']['GeneFile']      : self.gFile,
-			config.label['Gene']['OutFile']       : self.oFile,
-			config.label['Gene']['ResidueExtract']: resExtStr,
+			config.label[self.name]['FastaFile']     : self.fFile,
+			config.label[self.name]['GeneFile']      : self.gFile,
+			config.label[self.name]['OutFile']       : self.oFile,
+			config.label[self.name]['ResidueExtract']: resExtStr,
 		}
 		#---
 		#endregion --------------------------------------------------> Prepare
@@ -571,7 +577,7 @@ class GeneTab(wx.Panel, pstWidget.UserInput):
 
 		#region ---------------------------> Check there is something to write	
 		if self.protsselT == 0:
-			msg = config.msg['Error']['Gene']['NoProtFound']
+			msg = config.msg['Error'][self.name]['NoProtFound']
 			dtsWindow.MessageDialog('errorF', msg, self)
 			return False
 		else:
@@ -640,6 +646,10 @@ class PeptideTab(wx.Panel):
 
 		Attributes
 		----------
+		parent : wx widget or None
+			Parent of the tab
+		name : str
+			To identify the tab
 		lc : dtsWidget.ListZebra
 			This is a wx.ListCtrl to display the column's name in the Data File
 		userInput : pstPane.PeptidePane
@@ -651,16 +661,19 @@ class PeptideTab(wx.Panel):
 	def __init__(self, parent, name, statusbar):
 		""""""
 		#region -----------------------------------------------> Initial setup
+		self.parent = parent
+		self.name   = name
+		
 		super().__init__(parent, name=name)
 		#endregion --------------------------------------------> Initial setup
 		
 		#region -----------------------------------------------------> Widgets
 		self.lc = dtsWidget.ListZebra(
 			self, 
-			colLabel = config.label['Peptide']['Column'],
+			colLabel = config.label[name]['Column'],
 			colSize = config.size['ListCtrl']['Peptide'],
 		)
-		self.userInput = pstPane.PeptidePane(self, statusbar, lc=self.lc)
+		self.userInput = pstPane.PeptidePane(self, name, statusbar, lc=self.lc)
 		#endregion --------------------------------------------------> Widgets
 
 		#region -------------------------------------------------> AUI Control

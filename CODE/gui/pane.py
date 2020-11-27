@@ -46,6 +46,8 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 		----------
 		parent: wx widget
 			Parent of the widgets
+		name : str
+			To id the pane and its elements
 		statusbar : wx.StatusBar
 			Main status bar in the app to display msgs
 
@@ -53,6 +55,8 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 		----------
 		parent : wx widget
 			Parent of the pane
+		name : str
+			To id the pane and its elements
 		statusbar : wx.StatusBar
 			Main status bar in the app to display msgs
 		dataFile : dtsWidget.ButtonTextCtrlFF
@@ -73,10 +77,11 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 	#endregion --------------------------------------------------> Class setup	
 
 	#region --------------------------------------------------> Instance setup
-	def __init__(self, parent, statusbar, lc=None):
+	def __init__(self, parent, name, statusbar, lc=None):
 		""""""
 		#region -----------------------------------------------> Initial setup
 		self.parent = parent
+		self.name   = name
 
 		wx.Panel.__init__(self, parent)
 		pstWidget.UserInput.__init__(self, self)
@@ -88,54 +93,54 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 		#--> wx.Button & wx.TextCtrl
 		self.dataFile = dtsWidget.ButtonTextCtrlFF(
 			self.sbFile,
-			btnLabel  = config.label['Peptide']['DataFile'],
-			tcHint    = config.hint['Peptide']['DataFile'],
+			btnLabel  = config.label[name]['DataFile'],
+			tcHint    = config.hint[name]['DataFile'],
 			ext       = config.extLong['Data'],
 			listCtrl  = lc,
 			validator = dtsValidator.IsNotEmpty(
 				parent,
-				config.msg['Error']['Peptide']['DataFile'],
+				config.msg['Error'][name]['DataFile'],
 			),
 		)
 		self.outFile = dtsWidget.ButtonTextCtrlFF(
 			self.sbFile,
-			btnLabel  = config.label['Peptide']['OutFile'],
-			tcHint    = config.hint['Peptide']['OutFile'],
+			btnLabel  = config.label[name]['OutFile'],
+			tcHint    = config.hint[name]['OutFile'],
 			ext       = config.extLong['Data'],
 			mode      = 'save',
 			validator = dtsValidator.IsNotEmpty(
 				parent,
-				config.msg['Error']['Peptide']['OutFile'],
+				config.msg['Error'][name]['OutFile'],
 			),
 		)
 		#--> wx.StaticText & wx.TextCtrl
 		self.firstRes = dtsWidget.StaticTextCtrl(
 			self.sbValue,
-			stLabel   = config.label['Peptide']['FirstResidue'],
-			tcHint    = config.hint['Peptide']['FirstResidue'],
+			stLabel   = config.label[name]['FirstResidue'],
+			tcHint    = config.hint[name]['FirstResidue'],
 			validator = dtsValidator.NumberList(
 				parent,
-				config.msg['Error']['Peptide']['FirstResidue'],
+				config.msg['Error'][name]['FirstResidue'],
 				refMin = 1,
 			),
 		)
 		self.startRes = dtsWidget.StaticTextCtrl(
 			self.sbColumn,
-			stLabel   = config.label['Peptide']['StartResidue'],
-			tcHint    = config.hint['Peptide']['StartResidue'],
+			stLabel   = config.label[name]['StartResidue'],
+			tcHint    = config.hint[name]['StartResidue'],
 			validator = dtsValidator.NumberList(
 				parent,
-				config.msg['Error']['Peptide']['StartResidue'],
+				config.msg['Error'][name]['StartResidue'],
 				refMin = 0
 			),
 		)
 		self.colExtract = dtsWidget.StaticTextCtrl(
 			self.sbColumn,
-			stLabel   = config.label['Peptide']['ColExtract'],
-			tcHint    = config.hint['Peptide']['ColExtract'],
+			stLabel   = config.label[name]['ColExtract'],
+			tcHint    = config.hint[name]['ColExtract'],
 			validator = dtsValidator.NumberList(
 				parent,
-				config.msg['Error']['Peptide']['ColExtract'],
+				config.msg['Error'][name]['ColExtract'],
 				isList = True,
 				refMin = 0,
 			),
@@ -248,28 +253,28 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 		#endregion ------------------------------------------------------> Msg
 		
 		#region -------------------------------------------> Individual Fields
-		msg = f"{msgM}: {config.label['Peptide']['DataFile']}"
+		msg = f"{msgM}: {config.label[self.name]['DataFile']}"
 		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
 		if self.dataFile.tc.GetValidator().Validate(self):
 			pass
 		else:
 			return False
 
-		msg = f"{msgM}: {config.label['Peptide']['OutFile']}"
+		msg = f"{msgM}: {config.label[self.name]['OutFile']}"
 		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
 		if self.outFile.tc.GetValidator().Validate(self):
 			pass
 		else:
 			return False
 
-		msg = f"{msgM}: {config.label['Peptide']['FirstResidue']}"
+		msg = f"{msgM}: {config.label[self.name]['FirstResidue']}"
 		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
 		if self.firstRes.tc.GetValidator().Validate(self):
 			pass
 		else:
 			return False
 		
-		msg = f"{msgM}: {config.label['Peptide']['StartResidue']}"
+		msg = f"{msgM}: {config.label[self.name]['StartResidue']}"
 		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
 		if self.startRes.tc.GetValidator().Validate(
 			self, 
@@ -279,7 +284,7 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 		else:
 			return False
 
-		msg = f"{msgM}: {config.label['Peptide']['ColExtract']}"
+		msg = f"{msgM}: {config.label[self.name]['ColExtract']}"
 		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
 		if self.colExtract.tc.GetValidator().Validate(
 			self, 
@@ -322,11 +327,11 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 		#---
 		#--> For output
 		self.d = {
-			config.label['Peptide']['DataFile']    : self.iFile,
-			config.label['Peptide']['OutFile']     : self.oFile,
-			config.label['Peptide']['FirstResidue']: self.fRes,
-			config.label['Peptide']['StartResidue']: self.sRes,
-			config.label['Peptide']['ColExtract']  : colExtStr,
+			config.label[self.name]['DataFile']    : self.iFile,
+			config.label[self.name]['OutFile']     : self.oFile,
+			config.label[self.name]['FirstResidue']: self.fRes,
+			config.label[self.name]['StartResidue']: self.sRes,
+			config.label[self.name]['ColExtract']  : colExtStr,
 		}
 		#---
 		#endregion --------------------------------------------------> Prepare
@@ -397,7 +402,7 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 
 		#region ---------------------------> Check there is something to write	
 		if self.ptotal == 0:
-			msg = config.msg['Error']['Peptide']['NoPeptide']
+			msg = config.msg['Error'][self.name]['NoPeptide']
 			dtsWindow.MessageDialog('errorF', msg, self)
 			return False
 		else:
