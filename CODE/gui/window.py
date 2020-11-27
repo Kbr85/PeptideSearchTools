@@ -21,7 +21,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------
 
-"""Main window of the App
+"""Main windows and dialogs of the App
 """
 
 #region -------------------------------------------------------------- Imports
@@ -181,6 +181,8 @@ class ConsensusConf(wx.Dialog):
 			Parent of the window 
 		name : str
 			To id the window and its elements
+		tcPosList : list or None
+			To know if widgets have been created
 		nRes : dts.Widget.StaticTextCtrlButton
 			Create field widgets
 		swMatrix : wx.ScrolledWindow
@@ -196,11 +198,12 @@ class ConsensusConf(wx.Dialog):
 	def __init__(self, parent, name, title=None):
 		""""""
 		#region -----------------------------------------------> Initial setup
-		self.parent = parent
-		self.name   = name
+		self.parent    = parent
+		self.name      = name
+		self.tcPosList = None
+
 		tTitle = config.title['ConsConf'] if title is None else title
 		style  = wx.CAPTION|wx.CLOSE_BOX|wx.RESIZE_BORDER
-
 		super().__init__(parent, title=tTitle, style=style)
 		#region -----------------------------------------------> Initial setup
 
@@ -262,6 +265,7 @@ class ConsensusConf(wx.Dialog):
 
 		#region --------------------------------------------------------> Bind
 		self.nRes.btn.Bind(wx.EVT_BUTTON, self.OnCreate)
+		self.Bind(wx.EVT_BUTTON, self.OnOkCheck)
 		#endregion -----------------------------------------------------> Bind
 
 		#region ----------------------------------------------> Initial Values
@@ -271,6 +275,58 @@ class ConsensusConf(wx.Dialog):
 	#endregion -----------------------------------------------> Instance setup
 
 	#region ---------------------------------------------------> Class methods
+	def OnOkCheck(self, event):
+		"""Check widgets created after window initialization and perform checks
+			involving several widgets 
+		
+			Parameters
+			----------
+			event : wx.Event
+				Information about the event
+		"""
+		#region ----------------------------------------------> Skip if Cancel
+		if event.GetEventObject().GetId() == wx.ID_OK:
+			pass
+		else:
+			event.Skip()
+			return True
+		#endregion -------------------------------------------> Skip if Cancel
+
+		#region ---------------------------------------------------> Variables
+		values = []
+		#endregion ------------------------------------------------> Variables
+
+		#region -------------------------------------------------------> Check
+		#--> Make sure there are widgets to check
+		if self.tcPosList is None:
+			event.Skip()
+			return False
+		else:
+			pass
+		#--> Check widgets
+		for k,v in enumerate(self.tcPosList):
+			#--> Skip first item, it is not a wx.TextCtrl
+			if k == 0:
+				continue
+			else:
+				pass
+			#--> Check content
+			if v.GetValidator().Validate(self):
+				pass
+			else:
+				return False
+			#--> Check unique values
+			if (p := v.GetValue()) not in values:
+				values.append(p)
+			else:
+				msg = config.msg['Error'][self.name]['PosUnique']
+				dtsWindow.MessageDialog('errorF', msg, parent=self)
+				return False
+		#endregion ----------------------------------------------------> Check
+
+		event.Skip()
+	#---
+
 	def OnInitVal(self):
 		"""Fill the fields in the window if parent.posAA is not empty """
 		#region -------------------------------> Get string from parent window
@@ -332,32 +388,44 @@ class ConsensusConf(wx.Dialog):
 		)
 		self.tcPosList.append(wx.StaticText(
 			self.swMatrix,
-			label='Residue number',
+			label = config.label[self.name]['Position'],
 			)
 		)
 		self.tcAAList.append(wx.StaticText(
 			self.swMatrix,
-			label='Amino acids',
+			label = config.label[self.name]['AA'],
 			)
 		)
 		#--> Create the fields
 		for a in range(self.nRow):
+			#--> Consensus position
 			self.stPosList.append(wx.StaticText(
 				self.swMatrix,
 				label = str(a+1),
 				)
 			)
-			self.tcPosList.append(wx.TextCtrl(
-				self.swMatrix,
-				size  = config.size['TextCtrl'][self.name]['Residue'],
-				style = wx.TE_CENTRE,
+			#--> Residue number
+			self.tcPosList.append(
+				wx.TextCtrl(
+					self.swMatrix,
+					size  = config.size['TextCtrl'][self.name]['Position'],
+					style = wx.TE_CENTRE,
+					validator = dtsValidator.NumberList(
+						self,
+						config.msg['Error'][self.name]['Position'],
+						refMin = 1,
+					),
 				)
 			)
-			self.tcAAList.append(wx.TextCtrl(
-				self.swMatrix,
-				size = config.size['TextCtrl'][self.name]['AA'],
+			self.tcPosList[a+1].SetHint(config.hint[self.name]['Position'])
+			#--> Amino Acids
+			self.tcAAList.append(
+				wx.TextCtrl(
+					self.swMatrix,
+					size = config.size['TextCtrl'][self.name]['AA'],
 				)
 			)
+			self.tcAAList[a+1].SetHint(config.hint[self.name]['AA'])
 		#endregion --------------------------------------------> Create fields
 
 		#region ------------------------------------------------------> Sizers

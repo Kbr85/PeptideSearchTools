@@ -115,12 +115,12 @@ size = { # Base size for widgets
 		'Peptide' : (50, 150),
 	},
 	'ScrolledW' : { # wx.ScrolledWindow
-		'ConsensusConf' : (450, 200),
+		'ConsensusConf' : (500, 200),
 	},
 	'TextCtrl' : { # wx.TextCtrl
 		'ConsensusConf' : { # gui.window.ConsensusConf
-			'Residue': (115,22),
-			'AA'     : (200, 22),
+			'Position': (150,22),
+			'AA'      : (200, 22),
 		},
 	},
 }
@@ -173,8 +173,10 @@ label = { # Label for wx.Buttons, wx.StaticText, etc
 		'CompProt' : 'Only complete proteins',
 	},
 	'ConsensusConf' : { # gui.window.ConsensusConf
-		'Number' : 'Number of positions',
-		'Create' : 'Create fields',
+		'Number'  : 'Number of positions',
+		'Create'  : 'Create fields',
+		'Position': 'Residue Numbers',
+		'AA'      : 'Amino Acids',
 	},
 }
 #endregion -----------------------------------------------------------> Labels
@@ -209,6 +211,10 @@ hint = { # Hint for wx.TextCtrl
 		'PosAA'    : (
 			f"Dictionary e.g. {{2: 'A W', 3: 'S T', 4: 'I A', 'Pos': True}} "
 			f"with the positions to analyse and the AAs to search for."),
+	},
+	'ConsensusConf' : { # gui.window.ConsensusConf
+		'Position' : ("Positive integer, e.g. 3."),
+		'AA' : ("Space-separated list of AAs, e.g. A H K."),
 	},
 }
 #endregion ------------------------------------------------------------> Hints
@@ -268,13 +274,18 @@ msg = { # Messages for the user
 				f"Select the path to the {label['Consensus']['FastaFile']}."),
 			'OutFile' : (
 				f"Select the path to the {label['Consensus']['OutFile']}."),
-			'PosAA' : f"",
+			'PosAA' : f"Define the {label['Consensus']['PosAA']} to analyse.",
 		},
 		'ConsensusConf' : {
 			'Number' : (
 				f"Only a positive integer can be accepted in "
 				f"{label['ConsensusConf']['Number']}."),
-			'PosAA' : f"Define the {label['Consensus']['PosAA']} to analyse.",
+			'Position' : (
+				f"Only a positive integer can be accepted in "
+				f"{label['ConsensusConf']['Position']}."),
+			'PosUnique' : (
+				f"The values for {label['ConsensusConf']['Position']} must be "
+				f"unique."),
 		},
 	},
 }
