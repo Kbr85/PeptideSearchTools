@@ -219,7 +219,7 @@ class ConsensusTab(wx.Panel, pstWidget.UserInput):
 		"""
 		with pstWindow.ConsensusConf(self, 'ConsensusConf') as dlg:
 			if dlg.ShowModal() == wx.ID_OK:
-				pass
+				dlg.OnExport(self.posAA.tc)
 			else:
 				pass
 	#---

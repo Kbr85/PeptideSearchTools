@@ -275,58 +275,6 @@ class ConsensusConf(wx.Dialog):
 	#endregion -----------------------------------------------> Instance setup
 
 	#region ---------------------------------------------------> Class methods
-	def OnOkCheck(self, event):
-		"""Check widgets created after window initialization and perform checks
-			involving several widgets 
-		
-			Parameters
-			----------
-			event : wx.Event
-				Information about the event
-		"""
-		#region ----------------------------------------------> Skip if Cancel
-		if event.GetEventObject().GetId() == wx.ID_OK:
-			pass
-		else:
-			event.Skip()
-			return True
-		#endregion -------------------------------------------> Skip if Cancel
-
-		#region ---------------------------------------------------> Variables
-		values = []
-		#endregion ------------------------------------------------> Variables
-
-		#region -------------------------------------------------------> Check
-		#--> Make sure there are widgets to check
-		if self.tcPosList is None:
-			event.Skip()
-			return False
-		else:
-			pass
-		#--> Check widgets
-		for k,v in enumerate(self.tcPosList):
-			#--> Skip first item, it is not a wx.TextCtrl
-			if k == 0:
-				continue
-			else:
-				pass
-			#--> Check content
-			if v.GetValidator().Validate(self):
-				pass
-			else:
-				return False
-			#--> Check unique values
-			if (p := v.GetValue()) not in values:
-				values.append(p)
-			else:
-				msg = config.msg['Error'][self.name]['PosUnique']
-				dtsWindow.MessageDialog('errorF', msg, parent=self)
-				return False
-		#endregion ----------------------------------------------------> Check
-
-		event.Skip()
-	#---
-
 	def OnInitVal(self):
 		"""Fill the fields in the window if parent.posAA is not empty """
 		#region -------------------------------> Get string from parent window
@@ -351,7 +299,7 @@ class ConsensusConf(wx.Dialog):
 					if Pos:
 						self.tcPosList[i].SetValue(str(k))
 					else:
-						pass
+						self.tcPosList[i].SetValue('NA')
 			#-->
 			return True
 		#endregion -------------------------------------> Create & fill fields
@@ -413,6 +361,7 @@ class ConsensusConf(wx.Dialog):
 					validator = dtsValidator.NumberList(
 						self,
 						config.msg['Error'][self.name]['Position'],
+						opt    = True,
 						refMin = 1,
 					),
 				)
@@ -422,7 +371,12 @@ class ConsensusConf(wx.Dialog):
 			self.tcAAList.append(
 				wx.TextCtrl(
 					self.swMatrix,
-					size = config.size['TextCtrl'][self.name]['AA'],
+					size      = config.size['TextCtrl'][self.name]['AA'],
+					validator = dtsValidator.StringList(
+						self,
+						config.optAA,
+						config.msg['Error'][self.name]['AA'],
+					),
 				)
 			)
 			self.tcAAList[a+1].SetHint(config.hint[self.name]['AA'])
@@ -464,6 +418,129 @@ class ConsensusConf(wx.Dialog):
 		self.swMatrix.SetVirtualSize(self.swSizer.GetSize())
 		self.swMatrix.SetScrollRate(20,20)
 		#endregion ---------------------------------------------------> Sizers
+	#---
+
+	def OnOkCheck(self, event):
+		"""Check widgets created after window initialization and perform checks
+			involving several widgets 
+		
+			Parameters
+			----------
+			event : wx.Event
+				Information about the event
+		"""
+		#region ----------------------------------------------> Skip if Cancel
+		if event.GetEventObject().GetId() == wx.ID_OK:
+			pass
+		else:
+			event.Skip()
+			return True
+		#endregion -------------------------------------------> Skip if Cancel
+
+		#region ---------------------------------------------------> Variables
+		#--> For unique values
+		values = []
+		#--> For numbers increase. Starts in 0 because validator check n > 0
+		a = 0 
+		#--> To track all NA
+		valuesNA = 0
+		#endregion ------------------------------------------------> Variables
+
+		#region -------------------------------------------------------> Check
+		#--> Make sure there are widgets to check
+		if self.tcPosList is None:
+			event.Skip()
+			return False
+		else:
+			pass
+		#--> Check values
+		for k, v in enumerate(self.tcPosList):
+			#--> Skip first elements, it is the header
+			if k == 0:
+				continue
+			else:
+				pass
+			#--> Get value and fill valuesNA
+			if (val := v.GetValue()) == 'NA':
+				valuesNA += 1
+			else:
+				pass
+			#--> If all NA continue
+			if valuesNA == k:
+				continue
+			elif valuesNA > 0:
+				msg = config.msg['Error'][self.name]['Position']
+				dtsWindow.MessageDialog('errorF', msg, parent=self)
+				return False
+			else:
+				pass
+			#--> Check value
+			if v.GetValidator().Validate(self):
+				pass
+			else:
+				return False
+			#--> Check unique values & increasing
+			if (p := int(val)) not in values:
+				if p > a:
+					values.append(p)
+					a = p
+				else:
+					msg = config.msg['Error'][self.name]['PosIncrease']
+					dtsWindow.MessageDialog('errorF', msg, parent=self)
+					return False
+			else:
+				msg = config.msg['Error'][self.name]['PosUnique']
+				msg = msg + f"\n\nIncorrect value: {p}\n"
+				dtsWindow.MessageDialog('errorF', msg, parent=self)
+				return False
+		#--> Set Pos
+		if valuesNA == k:
+			self.Pos = False
+		else:
+			self.Pos = True
+		#endregion ----------------------------------------------------> Check
+
+		event.Skip()
+	#---
+
+	def OnExport(self, tc):
+		"""Export the postions & AA to the given wx.TextCtrl
+
+			Parameters
+			----------
+			tc : wx.TextCtrl
+				wx.TextCtrl to export the data to
+
+			Notes
+			-------
+			Creates the dict to hold the positions and the AA, 
+			e.g. {'2': 'A C', '3': 'F G', 'Pos': True}. The keys are the
+			residue numbers in which the consensus sequence is searched.
+			The Pos key is boolean to discard the residue numbers (False) or
+			use them in the analysis.
+		"""
+		#region ------------------------------------------> Create & Fill dict
+		#--> Dict
+		myDict = {}
+		#--> Fill
+		if self.Pos:
+			for k, v in zip(self.tcPosList[1:], self.tcAAList[1:]):
+				myDict[k.GetValue()] = v.GetValue()
+		else:
+			for k, v in enumerate(self.tcAAList):
+				if k != 0:
+					myDict[k] = v.GetValue()
+				else:
+					pass
+		#--> Add Pos
+		myDict[config.dictKey[self.name]['PosKey']] = self.Pos
+		#endregion ---------------------------------------> Create & Fill dict
+
+		#region ---------------------------------------------> Export
+		tc.SetValue(str(myDict))
+		#endregion ------------------------------------------> Export
+		
+		return True
 	#---
 	#endregion ------------------------------------------------> Class methods
 #---

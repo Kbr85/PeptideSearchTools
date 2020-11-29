@@ -29,6 +29,8 @@
 import os
 import platform
 from pathlib import Path
+
+from dat4s_core.config.config import optAA as dtsOptAA
 #endregion ----------------------------------------------------------> Imports
 
 #region ------------------------------------------ NON-CONFIGURABLE PARAMETERS
@@ -115,12 +117,12 @@ size = { # Base size for widgets
 		'Peptide' : (50, 150),
 	},
 	'ScrolledW' : { # wx.ScrolledWindow
-		'ConsensusConf' : (500, 200),
+		'ConsensusConf' : (520, 200),
 	},
 	'TextCtrl' : { # wx.TextCtrl
 		'ConsensusConf' : { # gui.window.ConsensusConf
-			'Position': (150,22),
-			'AA'      : (200, 22),
+			'Position': (180,22),
+			'AA'      : (220, 22),
 		},
 	},
 }
@@ -213,13 +215,13 @@ hint = { # Hint for wx.TextCtrl
 			f"with the positions to analyse and the AAs to search for."),
 	},
 	'ConsensusConf' : { # gui.window.ConsensusConf
-		'Position' : ("Positive integer, e.g. 3."),
+		'Position' : ("Integer (> 0) or NA, e.g. 3."),
 		'AA' : ("Space-separated list of AAs, e.g. A H K."),
 	},
 }
 #endregion ------------------------------------------------------------> Hints
 
-#region ---------------------------------------------------------------> Msg
+#region -----------------------------------------------------------------> Msg
 msg = { # Messages for the user
 	'Success' : "The analysis finished correctly.",
 	'Step' : { # Statusbar msg for steps in Run
@@ -281,16 +283,29 @@ msg = { # Messages for the user
 				f"Only a positive integer can be accepted in "
 				f"{label['ConsensusConf']['Number']}."),
 			'Position' : (
-				f"Only a positive integer can be accepted in "
-				f"{label['ConsensusConf']['Position']}."),
+				f"The values for {label['ConsensusConf']['Position']} must be "
+				f"all NA or all positive integers."),
 			'PosUnique' : (
 				f"The values for {label['ConsensusConf']['Position']} must be "
-				f"unique."),
+				f"unique, if not NA."),
+			'PosIncrease' : (
+				f"The values for {label['ConsensusConf']['Position']} must be "
+				f"monotonically increasing, if not NA."),
+			'AA' : (
+				f"Only a space-separated list of AAs (one letter code) can be "
+				f"accepted in {label['ConsensusConf']['AA']}."
+			),
 		},
 	},
 }
-#endregion ------------------------------------------------------------> Msg
+#endregion --------------------------------------------------------------> Msg
 
+#endregion --------------------------------------> NON-CONFIGURABLE PARAMETERS
+
+#region ---------------------------------------------> CONFIGURABLE PARAMETERS
+optAA = dtsOptAA
+
+#endregion ------------------------------------------> CONFIGURABLE PARAMETERS
 
 # win = { # To track the existence and number of certain windows. 
 # 		# None values change to a reference to the open window.
