@@ -18,20 +18,19 @@ GNU General Public License below for more details.
 
 ## Modules and Libraries  ##
 
-Peptide Search Tools 1.0.1 uses the following modules and libraries:
+Peptide Search Tools 1.1.0 uses the following modules and libraries:
 
-NumPy X https://numpy.org/license.html
-Pandas X https://pandas.pydata.org/docs/index.html
-PyInstaller X https://www.pyinstaller.org/license.html
-Python X https://docs.python.org/3/license.html
-wxPython X https://wxpython.org/pages/license/
+Data Analysis Tools for Science - Core 0.0.2 (In house developed python module)
+PyInstaller 4.0 (https://www.pyinstaller.org/license.html)
+Python 3.8.5 (https://docs.python.org/3/license.html)
+wxPython 4.1.0 (https://wxpython.org/pages/license/)
 
 The copyrights notes and license agreements for these modules and libraries can
 be found in the respective web sites.
 
-## Peptide Search Tool 1.0.1 License  ##
+## Peptide Search Tool 1.1.0 License  ##
 
-Peptide Search Tools 1.0.1 is distributed under the GPLv3 license.
+Peptide Search Tools 1.1.0 is distributed under the GPL-3 license.
 
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007

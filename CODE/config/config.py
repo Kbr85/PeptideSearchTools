@@ -37,7 +37,7 @@ from dat4s_core.config.config import optAA as dtsOptAA
 
 #region --------------------------------------------------> General parameters
 development = True # To control variables with different values in dev or prod
-version     = '1.0.1' # String to write in the output files
+version     = '1.1.0' # String to write in the output files
 cOS         = platform.system() # Current operating system
 cwd = Path(os.path.abspath(os.path.dirname(__file__))) # Current directory
 #endregion -----------------------------------------------> General parameters
