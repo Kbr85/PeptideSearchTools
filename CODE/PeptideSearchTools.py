@@ -32,7 +32,7 @@ import wx
 import wx.adv
 #region -------------------------------------------------------------> Imports
 
-DEVELOPMENT = True # # Control variables with different values in dev or prod
+DEVELOPMENT = False # # Control variables with different values in dev or prod
 
 #region -------------------------------------------------------------> Classes
 class PeptideSearchToolApp(wx.App):
