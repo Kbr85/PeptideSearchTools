@@ -1,7 +1,7 @@
 ---> Brief Description of Peptide Search Tools 1.1.0 <---
 
 
-Peptide Search Tools v1.1.0 is designed as a Notebook in which each page gives 
+Peptide Search Tools v1.1.0 is designed as a Notebook in which each tab gives 
 access to specific functionalities. The main objective is to search for peptide
 sequences in different files with various search criteria.
 
