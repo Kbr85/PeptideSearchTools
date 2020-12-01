@@ -205,7 +205,7 @@ class ConsensusTab(wx.Panel, pstWidget.UserInput):
 			self.outFile.tc.SetValue("/Users/bravo/TEMP-GUI/BORRAR-PeptideSearchTools/consensus-out.txt")
 			self.posAA.tc.SetValue("{2: 'A W', 3: 'S T', 4: 'I A', 'Pos': True}")
 		else:
-			self.colExtract.tc.SetValue("NA")
+			pass
 		#endregion -------------------------> Test & Default production values
 	#---
 	#endregion -----------------------------------------------> Instance setup
@@ -662,7 +662,7 @@ class GeneTab(wx.Panel, pstWidget.UserInput):
 			self.outFile.tc.SetValue("/Users/bravo/TEMP-GUI/BORRAR-PeptideSearchTools/gene-out.txt")
 			self.residueExtract.tc.SetValue("5 10 20 50")
 		else:
-			self.colExtract.tc.SetValue("NA")
+			pass
 		#endregion -------------------------> Test & Default production values
 	#---
 	#endregion -----------------------------------------------> Instance setup

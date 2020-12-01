@@ -29,7 +29,6 @@
 import wx
 
 import config.config as config
-import gui.gui_methods as gmethods
 #endregion ----------------------------------------------------------> Imports
 
 #region ----------------------------------------------------------> Base menus
