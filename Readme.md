@@ -7,7 +7,7 @@ written in Python (3.8.5) and uses wxPython (4.1.0) to create the GUI.
 ## Installation
 
 The program is distributed as ready to use binaries reducing the installation 
-process to just [downloading]('https://github.com/Kbr85/PeptideSearchTools/releases') the files and double clicking on the executable.
+process to just [downloading](https://github.com/Kbr85/PeptideSearchTools/releases) the files and double clicking on the executable.
 
 ## Contributing
 
@@ -23,4 +23,4 @@ Kenny Bravo Rodriguez (kenny.bravorodriguez@mpi-dortmund.mpg.de)
 Copyright (c) 2019 Max Planck Institute of Molecular Physiology
 
 ## License
-[GPL-3]('https://www.gnu.org/licenses/gpl-3.0.en.html')
+[GPL-3](https://www.gnu.org/licenses/gpl-3.0.en.html)
