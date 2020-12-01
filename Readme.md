@@ -10,15 +10,17 @@ The program is distributed as ready to use binaries reducing the installation
 process to just [downloading]('https://github.com/Kbr85/PeptideSearchTools/releases') the files and double clicking on the executable.
 
 ## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+Pull requests are welcome. For major changes, please open an issue first to 
+discuss what you would like to change.
 
 ## Author
 
-Kenny Bravo Rodriguez
+Kenny Bravo Rodriguez (kenny.bravorodriguez@mpi-dortmund.mpg.de)
 
 ## Copyright
 
-Copyright (c) 2020 Max Planck Institute of Molecular Physiology
+Copyright (c) 2019 Max Planck Institute of Molecular Physiology
 
 ## License
 [GPL-3]('https://www.gnu.org/licenses/gpl-3.0.en.html')

@@ -277,7 +277,7 @@ class UserInput():
 		if self.runEnd:
 			dtsWindow.MessageDialog(
 				'success', 
-				f"{config.msg['Success']}\n\nElapsed time: {self.deltaT}",
+				f"{config.msg['Success']}\n\nRunning time: {self.deltaT}",
 				parent = self.parent,
 			)
 		else:

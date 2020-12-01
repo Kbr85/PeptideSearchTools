@@ -215,7 +215,7 @@ hint = { # Hint for wx.TextCtrl
 		'OutFile'  : f"Path to the {label['Consensus']['OutFile']}.",
 		'PosAA'    : (
 			f"Dictionary e.g. {{2: 'A W', 3: 'S T', 4: 'I A', 'Pos': True}} "
-			f"with the positions to analyse and the AAs to search for."),
+			f"with the residue numbers to analyse and the AAs to search for."),
 	},
 	'ConsensusConf' : { # gui.window.ConsensusConf
 		'Position' : ("Integer (> 0) or NA, e.g. 3."),
