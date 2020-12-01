@@ -25,6 +25,8 @@
 """
 
 #region -------------------------------------------------------------- Imports
+import ast
+import itertools
 from operator import itemgetter
 
 import wx
@@ -70,7 +72,7 @@ class ConsensusTab(wx.Panel, pstWidget.UserInput):
 		#region -----------------------------------------------> Initial setup
 		self.parent = parent
 		self.name   = name
-
+		
 		wx.Panel.__init__(self, parent, name=name)
 		pstWidget.UserInput.__init__(self, self)
 		#endregion --------------------------------------------> Initial setup
@@ -199,8 +201,8 @@ class ConsensusTab(wx.Panel, pstWidget.UserInput):
 
 		#region ----------------------------> Test & Default production values
 		if config.development:
-			self.fastaFile.tc.SetValue("/Users/bravo/Dropbox/SOFTWARE-DEVELOPMENT/APPS/PEPTIDE_SEARCH_TOOLS/LOCAL/DATA/NEW-DATA/HUMAN_ref_Jan2019.fasta")
-			self.outFile.tc.SetValue("/Users/bravo/TEMP-GUI/BORRAR-PeptideSearchTools/gene-out.txt")
+			self.fastaFile.tc.SetValue("/Users/bravo/Dropbox/SOFTWARE-DEVELOPMENT/APPS/PEPTIDE_SEARCH_TOOLS/LOCAL/DATA/NEW-DATA/HUMAN_ref_Jan2019-cut-long.fasta")
+			self.outFile.tc.SetValue("/Users/bravo/TEMP-GUI/BORRAR-PeptideSearchTools/consensus-out.txt")
 			self.posAA.tc.SetValue("{2: 'A W', 3: 'S T', 4: 'I A', 'Pos': True}")
 		else:
 			self.colExtract.tc.SetValue("NA")
@@ -211,7 +213,7 @@ class ConsensusTab(wx.Panel, pstWidget.UserInput):
 	#region ---------------------------------------------------> Class methods
 	def OnPosAA(self, event):
 		"""Launch the configuration window to set the postions and the AAs
-		
+
 			Parameters
 			----------
 			event : wx.Event
@@ -222,6 +224,283 @@ class ConsensusTab(wx.Panel, pstWidget.UserInput):
 				dlg.OnExport(self.posAA.tc)
 			else:
 				pass
+	#---
+
+	def CheckInput(self):
+		"""Check user input"""
+		#region ---------------------------------------------------------> Msg
+		msgM = config.msg['Step']['Check']
+		#endregion ------------------------------------------------------> Msg
+		
+		#region -------------------------------------------> Individual Fields
+		msg = f"{msgM}: {config.label[self.name]['FastaFile']}"
+		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
+		if self.fastaFile.tc.GetValidator().Validate(self):
+			pass
+		else:
+			return False
+		
+		msg = f"{msgM}: {config.label[self.name]['OutFile']}"
+		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
+		if self.outFile.tc.GetValidator().Validate(self):
+			pass
+		else:
+			return False
+
+		msg = f"{msgM}: {config.label[self.name]['PosAA']}"
+		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
+		if self.outFile.tc.GetValidator().Validate(self):
+			pass
+		else:
+			return False
+		#endregion ----------------------------------------> Individual Fields
+		
+		return True
+	#---
+
+	def PrepareRun(self):
+		"""Prepare the run """
+		#region ---------------------------------------------------------> Msg
+		msg = config.msg['Step']['Prepare']
+		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
+		#endregion ------------------------------------------------------> Msg
+
+		#region -----------------------------------------------------> Prepare
+		#--> Input
+		self.iFile    = self.fastaFile.tc.GetValue()
+		self.oFile    = self.outFile.tc.GetValue()
+		self.posAAVal = ast.literal_eval(self.posAA.tc.GetValue())
+		self.full     = self.cbCompProt.GetValue()
+		#--> Output
+		self.d = {
+			config.label[self.name]['FastaFile']: self.iFile,
+			config.label[self.name]['OutFile'] : self.oFile,
+			config.label[self.name]['PosAA']   : self.posAA.tc.GetValue(),
+			config.label[self.name]['CompProt']: self.full,
+		}
+		#--> Needed variables
+		self.ltotal    = 0
+		self.lempty    = 0
+		self.prottotal = 0
+		self.protsselT = 0
+		self.protfrag  = 0
+		#-> Signal if conSeq must be search in protSeq
+		self.searchP   = False 
+		#-> Value of Pos key to avoid using the printed name and config....
+		self.Pos = self.posAAVal[config.dictKey[self.name]['PosKey']]
+		#-> List of residues in which to look for the conSeq or None 
+		self.resID = [k for k in self.posAAVal.keys()][0:-1] if self.Pos else None
+		#-> List of possible AA in each position [['A', 'C'], ['K', 'R'] ...]
+		self.allAA = [x.split() for x in self.posAAVal.values() if type(x) == str]
+		#-> Count the appearances of conSeqs in the fasta proteins
+		self.seqProt = {} # = {'SeqA' : {Count: 0, PerCent: 0, pID: ''},}
+		for v in itertools.product(*self.allAA):
+			self.seqProt["".join(v)] = {'Count':0, 'PerCent':0, 'pID':''}
+		#-> Count the appearances of conSeqs in the fasta protein if the 
+		#-> search is done in the entire protein sequence
+		self.protSeq = {} # {ProtID: [SeqA, SeqB], .....}
+		#-> To check there is something to write to the output
+		self.countTotal = 0
+		#endregion --------------------------------------------------> Prepare
+
+		return True
+	#---
+
+	def RunAnalysis(self):
+		""" Process the data """
+		#region ---------------------------------------------------------> Msg
+		msg = config.msg['Step']['Run']
+		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
+		#endregion ------------------------------------------------------> Msg
+
+		#region -----------------------------------------------------> Process
+		#--> Read and search file
+		with open(self.iFile, 'r') as iFile:
+			for line in iFile:
+				self.ltotal += 1
+				#--> Remove new line characters and strip line
+				l = dtsStr.Str2List(line, strip='b')[0]
+				#--> Discard empty lines
+				if l == '':
+					self.lempty += 1
+				#--> Process start of new protein in fasta file
+				elif l[0] == '>':
+					self.prottotal += 1
+					#--> Search conSeq in the sequence of the previous protein
+					if self.searchP:
+						tseq = ''.join(lseq)
+						self.SearchConsensusSeq(tseq, tprot)
+					else:
+						pass
+				 	#--> Setup analysis for this protein
+					if 'Fragment' in l:
+						self.protfrag += 1
+						if self.full:
+							self.searchP = False
+						else:
+							self.searchP    = True
+							self.protsselT += 1
+							tprot = l.split('|')[1]
+							lseq  = []
+					else:
+						self.searchP    = True
+						self.protsselT += 1
+						tprot = l.split('|')[1]
+						lseq  = []
+				#--> Proccess sequence line in fasta file
+				else:
+					if self.searchP:
+						lseq.append(l)
+					else:
+						pass
+				#--> Update GUI
+				if self.ltotal % 100 == 0:
+					msg = (f"Analysing --> Total lines: {self.ltotal}, "
+						f"Empty lines: {self.lempty}, "
+						f"Total proteins: {self.prottotal}, "
+						f"Matched proteins: {self.protsselT}"
+					)
+					wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
+				else:
+					pass
+		#--> Last past to catch the last protein
+		if self.searchP:
+			tseq = ''.join(lseq)
+			self.SearchConsensusSeq(tseq, tprot)
+		else:
+			pass 
+		#--> Calculate %
+		for k in self.seqProt.keys():
+			self.countTotal += self.seqProt[k]['Count']
+			self.seqProt[k]['PerCent'] = (
+				f"{(100 * self.seqProt[k]['Count'] / self.protsselT):.2f}"
+			)
+		#--> Sort results
+		if self.countTotal == 0:
+			pass
+		else:
+			self.seqProt = {
+				k: self.seqProt[k] 
+				for k in sorted(
+					self.seqProt, 
+					key     = lambda x: self.seqProt[x]['Count'],
+					reverse = True,
+				)
+			}
+			self.protSeq = {
+				k: self.protSeq[k]
+				for k in sorted(
+					self.protSeq,
+					key = lambda x: x,
+				)
+			}
+		#endregion --------------------------------------------------> Process
+
+		return True
+	#---
+
+	def SearchConsensusSeq(self, protSeq, protID):
+		"""Identify if the consensus sequences appear in the sequence of a 
+			proteins & updates the self.seqProt and self.protSeq dict
+
+			Parameters
+			----------
+			protSeq : str
+				Sequence of the protein as str
+			protID : str
+				Protein ID
+		"""
+		#region -------------------------> Get sequence in the given positions
+		if self.Pos:
+			try:
+				seq = "".join([protSeq[x-1] for x in self.resID])
+			except IndexError:
+				return False
+		else:
+			seq = protSeq
+		#endregion ----------------------> Get sequence in the given positions
+
+		#region ------------------------------------------------------> Update
+		for k in self.seqProt.keys():
+			if k in seq:
+				#--> Update self.seqProt
+				self.seqProt[k]['Count'] += 1
+				self.seqProt[k]['pID'] += protID+', '
+				#--> Update self.protSeq
+				if protID in self.protSeq:
+					self.protSeq[protID] += k+', '
+				else:
+					self.protSeq[protID] = k+', '
+			else:
+				pass
+		#endregion ---------------------------------------------------> Update
+
+		return True
+	#---
+
+	def WriteOutput(self):
+		""""""
+		#region ---------------------------------------------------------> Msg
+		msg = config.msg['Step']['Output']
+		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
+		#endregion ------------------------------------------------------> Msg
+
+		#region ---------------------------> Check there is something to write	
+		if self.countTotal == 0:
+			msg = config.msg['Error'][self.name]['NoConsensusFound']
+			dtsWindow.MessageDialog('errorF', msg, self)
+			return False
+		else:
+			pass
+		#endregion ------------------------> Check there is something to write	
+
+		#region -------------------------------------------------------> Write
+		#--> Write input data
+		oFile = open(self.oFile, 'w')
+		oFile.write('Input data:\n')
+		dtsFF.WriteDict2File(oFile, self.d)
+		oFile.write('\n')
+		#---
+		#--> Write output
+		oFile.write('Output data:\n')
+		oFile.write(f"Total proteins\t{self.prottotal}\n")
+		oFile.write(f"Complete proteins\t{self.prottotal-self.protfrag}\n")
+		oFile.write(f"Fragment proteins\t{self.protfrag}\n")
+		oFile.write(f"Consensus sequence in proteins\t{len(self.protSeq)}\n")
+
+		header = f'\nCount\tSequence\tPercent\tProtein IDs'
+		oFile.write(header+'\n')
+		for k,v in self.seqProt.items():
+			oFile.write(f"{v['Count']}\t{k}\t{v['PerCent']}\t{v['pID'][0:-2]}\n")
+
+		if not self.Pos:
+			oFile.write(f"\nProtein IDs\tSequences\n")
+			for k, v in self.protSeq.items():
+				oFile.write(f"{k}\t{v[0:-2]}\n")
+			oFile.write("\n")
+		else:
+			pass
+		#---
+		#--> File last line
+		if self.Pos:
+			oFile.write("\n")
+		else:
+			pass
+		dtsFF.WriteLastLine2File(oFile, config.title['MainW'])
+		#---
+	 	#--> Close file and final summary in statusbar
+		oFile.close()
+		msg = (
+			f"Analysing --> Total lines: {self.ltotal}, "
+			f"Empty lines: {self.lempty}, "
+			f"Total proteins: {self.prottotal}, "
+			f"Matched proteins: {self.protsselT}"
+		)
+		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
+		#---
+		#endregion ----------------------------------------------------> Write
+
+		return True
 	#---
 	#endregion ------------------------------------------------> Class methods
 #---
@@ -475,14 +754,6 @@ class GeneTab(wx.Panel, pstWidget.UserInput):
 		)
 		resExtStr = " ".join(self.residueExtract.tc.GetValue().split())
 		#---
-		#--> Needed for the analysis
-		self.ltotal    = 0
-		self.lempty    = 0
-		self.prottotal = 0
-		self.protsselT = 0
-		self.searchP   = False
-		self.dataO     = []
-		#---
 		#--> For output
 		self.d = {
 			config.label[self.name]['FastaFile']     : self.fFile,
@@ -490,6 +761,14 @@ class GeneTab(wx.Panel, pstWidget.UserInput):
 			config.label[self.name]['OutFile']       : self.oFile,
 			config.label[self.name]['ResidueExtract']: resExtStr,
 		}
+		#---
+		#--> Needed for the analysis
+		self.ltotal    = 0
+		self.lempty    = 0
+		self.prottotal = 0
+		self.protsselT = 0
+		self.searchP   = False
+		self.dataO     = []
 		#---
 		#endregion --------------------------------------------------> Prepare
 		
@@ -584,7 +863,7 @@ class GeneTab(wx.Panel, pstWidget.UserInput):
 			pass
 		#endregion ------------------------> Check there is something to write	
 
-		# #region -------------------------------------------------------> Write
+		#region -------------------------------------------------------> Write
 		#--> Write input data
 		oFile = open(self.oFile, 'w')
 		oFile.write('Input data:\n')
@@ -613,21 +892,9 @@ class GeneTab(wx.Panel, pstWidget.UserInput):
 		)
 		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
 		#---
-		# #endregion ----------------------------------------------------> Write
+		#endregion ----------------------------------------------------> Write
 
 		return True
-	#---
-
-	def RunEnd(self):
-		""""""
-		if self.runEnd:
-			#--> Remove value of Output File to avoid overwriting it
-			self.outFile.tc.SetValue("")
-		else:
-			pass
-		#--> Standard ending 
-		super().RunEnd()
-		#---
 	#---
 	#endregion ------------------------------------------------> Class methods
 #---

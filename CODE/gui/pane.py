@@ -439,18 +439,6 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 
 		return True
 	#---
-
-	def RunEnd(self):
-		""""""
-		if self.runEnd:
-			#--> Remove value of Output File to avoid overwriting it
-			self.outFile.tc.SetValue("")
-		else:
-			pass
-		#--> Standard ending 
-		super().RunEnd()
-		#---
-	#---
 	#endregion ------------------------------------------------> Class methods
 #---
 #endregion ----------------------------------------------------------> Classes

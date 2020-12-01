@@ -205,7 +205,7 @@ class ConsensusConf(wx.Dialog):
 		tTitle = config.title['ConsConf'] if title is None else title
 		style  = wx.CAPTION|wx.CLOSE_BOX|wx.RESIZE_BORDER
 		super().__init__(parent, title=tTitle, style=style)
-		#region -----------------------------------------------> Initial setup
+		#endregion --------------------------------------------> Initial setup
 
 		#region -----------------------------------------------------> Widgets
 		self.nRes = dtsWidget.StaticTextCtrlButton(
@@ -525,7 +525,7 @@ class ConsensusConf(wx.Dialog):
 		#--> Fill
 		if self.Pos:
 			for k, v in zip(self.tcPosList[1:], self.tcAAList[1:]):
-				myDict[k.GetValue()] = v.GetValue()
+				myDict[int(k.GetValue())] = v.GetValue()
 		else:
 			for k, v in enumerate(self.tcAAList):
 				if k != 0:

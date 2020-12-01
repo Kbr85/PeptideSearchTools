@@ -277,6 +277,11 @@ class UserInput():
 		self.btnGroup.btnRun.Enable()
 		self.btnGroup.btnRun.SetLabel(config.label['ButtonGroup']['Run'])
 		self.statusbar.SetStatusText("")
+		if self.runEnd:
+			#--> Remove value of Output File to avoid overwriting it
+			self.outFile.tc.SetValue("")
+		else:
+			pass
 		#endregion ----------------------------------------------> Restart GUI
 
 		#region -------------------------------------------> Restart variables

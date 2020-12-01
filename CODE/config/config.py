@@ -140,6 +140,9 @@ dictKey = { # Import dict keys
 	'ConsensusConf' : { # gui.window.ConsensusConf
 		'PosKey' : 'Pos',
 	},
+	'Consensus' : { # gui.tab.Consensus
+		'PosKey' : 'Pos',
+	},
 }
 #endregion --------------------------------------------------------> Dict Keys
 
@@ -277,6 +280,9 @@ msg = { # Messages for the user
 			'OutFile' : (
 				f"Select the path to the {label['Consensus']['OutFile']}."),
 			'PosAA' : f"Define the {label['Consensus']['PosAA']} to analyse.",
+			'NoConsensusFound' : (
+				f"The consensus sequence was not found in the "
+				f"{label['Consensus']['FastaFile']}."),
 		},
 		'ConsensusConf' : {
 			'Number' : (
@@ -293,7 +299,8 @@ msg = { # Messages for the user
 				f"monotonically increasing, if not NA."),
 			'AA' : (
 				f"Only a space-separated list of AAs (one letter code) can be "
-				f"accepted in {label['ConsensusConf']['AA']}."
+				f"accepted in {label['ConsensusConf']['AA']}. Duplicate values "
+				f"are not accepted."
 			),
 		},
 	},
