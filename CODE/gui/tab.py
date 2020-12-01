@@ -249,7 +249,7 @@ class ConsensusTab(wx.Panel, pstWidget.UserInput):
 
 		msg = f"{msgM}: {config.label[self.name]['PosAA']}"
 		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
-		if self.outFile.tc.GetValidator().Validate(self):
+		if self.posAA.tc.GetValidator().Validate(self):
 			pass
 		else:
 			return False
@@ -358,7 +358,7 @@ class ConsensusTab(wx.Panel, pstWidget.UserInput):
 					msg = (f"Analysing --> Total lines: {self.ltotal}, "
 						f"Empty lines: {self.lempty}, "
 						f"Total proteins: {self.prottotal}, "
-						f"Matched proteins: {self.protsselT}"
+						f"Matched proteins: {len(self.protSeq)}"
 					)
 					wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
 				else:
@@ -494,7 +494,7 @@ class ConsensusTab(wx.Panel, pstWidget.UserInput):
 			f"Analysing --> Total lines: {self.ltotal}, "
 			f"Empty lines: {self.lempty}, "
 			f"Total proteins: {self.prottotal}, "
-			f"Matched proteins: {self.protsselT}"
+			f"Matched proteins: {len(self.protSeq)}"
 		)
 		wx.CallAfter(dtsWidget.StatusBarUpdate, self.statusbar, msg)
 		#---

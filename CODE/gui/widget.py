@@ -27,6 +27,7 @@ from wxPython or one widget with a fairly complicated initialization process.
 
 #region -------------------------------------------------------------> Imports
 import _thread
+from datetime import datetime
 
 import wx
 
@@ -50,6 +51,8 @@ class UserInput():
 
 		Attributes
 		----------
+		deltaT : str
+			Elapsed time of self.Run
 		sbFile : wx.StaticBox
 			StaticBox to contain the input/output file information
 		sbValue : wx.StaticBox
@@ -182,6 +185,8 @@ class UserInput():
 			test: str
 				Just needed by _thread.start_new_thread
 		"""
+		start = datetime.now()
+
 		#region -------------------------------------------------> Check input
 		if self.CheckInput():
 			pass
@@ -227,6 +232,11 @@ class UserInput():
 			return False
 		#endregion ---------------------------------------------> Load results
 
+		end = datetime.now()
+		self.deltaT = datetime.utcfromtimestamp(
+			(end-start).total_seconds()
+		).strftime("%H:%M:%S")
+
 		#region -------------------------------------------------> Restart GUI
 		self.runEnd = True
 		wx.CallAfter(self.RunEnd)
@@ -267,7 +277,7 @@ class UserInput():
 		if self.runEnd:
 			dtsWindow.MessageDialog(
 				'success', 
-				config.msg['Success'],
+				f"{config.msg['Success']}\n\nElapsed time: {self.deltaT}",
 				parent = self.parent,
 			)
 		else:

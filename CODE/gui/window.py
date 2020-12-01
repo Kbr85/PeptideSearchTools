@@ -418,6 +418,25 @@ class ConsensusConf(wx.Dialog):
 		self.swMatrix.SetVirtualSize(self.swSizer.GetSize())
 		self.swMatrix.SetScrollRate(20,20)
 		#endregion ---------------------------------------------------> Sizers
+
+		#region --------------------------------------------------------> Bind
+		self.tcPosList[0].Bind(wx.EVT_RIGHT_DOWN, self.OnFillNA)
+		#endregion -----------------------------------------------------> Bind
+	#---
+
+	def OnFillNA(self, event):
+		"""Fill all Residue Number fields with NA
+
+			Parameters
+			----------
+			event : wx.Event
+				Information about the event
+		"""
+		for k,v in enumerate(self.tcPosList):
+			if k != 0:
+				v.SetValue("NA")
+			else:
+				pass
 	#---
 
 	def OnOkCheck(self, event):

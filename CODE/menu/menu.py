@@ -87,9 +87,9 @@ class SearchMenu(wx.Menu, MenuMethods):
 	 	#endregion --------------------------------------------> Initial setup
 
 		#region --------------------------------------------------> Menu items
-		self.Append(1, config.title['Peptide']+'\tAlt+Ctrl+P')
-		self.Append(2, config.title['Gene']+'\tAlt+Ctrl+G')
 		self.Append(3, config.title['Consensus']+'\tAlt+Ctrl+C')
+		self.Append(2, config.title['Gene']+'\tAlt+Ctrl+G')
+		self.Append(1, config.title['Peptide']+'\tAlt+Ctrl+P')
 		#endregion -----------------------------------------------> Menu items
 
 		#region --------------------------------------------------------> Bind
@@ -139,7 +139,6 @@ class HelpMenu(wx.Menu, MenuMethods):
 	#---
 	#endregion -----------------------------------------------> Instance setup
 #---
-
 #endregion -------------------------------------------------> Individual menus
 
 #region ------------------------------------------------------------> MenuBars
