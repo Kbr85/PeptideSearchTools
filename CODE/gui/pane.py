@@ -57,6 +57,8 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 			Parent of the pane
 		name : str
 			To id the pane and its elements
+		lc : wx.ListCtrl or None
+			wx.ListCtrl to show the name of the columns in the input file
 		statusbar : wx.StatusBar
 			Main status bar in the app to display msgs
 		dataFile : dtsWidget.ButtonTextCtrlFF
@@ -82,6 +84,7 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 		#region -----------------------------------------------> Initial setup
 		self.parent = parent
 		self.name   = name
+		self.lc     = lc
 
 		wx.Panel.__init__(self, parent)
 		pstWidget.UserInput.__init__(self, self)
@@ -232,6 +235,8 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 		self.Sizer.Fit(self)
 		#endregion ---------------------------------------------------> Sizers
 
+		self.btnGroup.btnClear.Bind(wx.EVT_BUTTON, self.OnClear)
+
 		#region ----------------------------> Test & Default production values
 		if config.development:
 			self.dataFile.tc.SetValue("/Users/bravo/Dropbox/SOFTWARE-DEVELOPMENT/APPS/PEPTIDE_SEARCH_TOOLS/LOCAL/DATA/NEW-DATA/peptides.txt")
@@ -246,6 +251,22 @@ class PeptidePane(wx.Panel, pstWidget.UserInput):
 	#endregion -----------------------------------------------> Instance setup
 
 	#region ---------------------------------------------------> Class methods
+	def OnClear(self, event):
+		"""Needed to clear the wx.ListBox since dtsWidget.ButtonClearAll does
+			not support this, yet.
+		"""
+		#region -------------------------------------------> Empty wx.ListCtrl
+		if self.lc is not None:
+			self.lc.DeleteAllItems()
+		else:
+			pass
+		#endregion ----------------------------------------> Empty wx.ListCtrl
+		
+		#region ---------------> Skip event to clear wx.TextCtrl & wx.ComboBox
+		event.Skip()
+		#endregion ------------> Skip event to clear wx.TextCtrl & wx.ComboBox
+	#---
+
 	def CheckInput(self):
 		"""Chek user input. Overrides BaseTab.CheckInput"""
 		#region ---------------------------------------------------------> Msg
