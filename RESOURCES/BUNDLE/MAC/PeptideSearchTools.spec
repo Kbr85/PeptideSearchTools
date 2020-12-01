@@ -6,7 +6,7 @@ block_cipher = None
 a = Analysis(['PeptideSearchTools.py'],
              pathex=['/Users/kenny/TEMP-GUI/BORRAR-PeptideSearchTools'],
              binaries=[],
-             datas=[],
+             datas=[('RESOURCES', '.')],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
@@ -26,7 +26,8 @@ exe = EXE(pyz,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
-          console=False )
+          console=False,
+		  icon='ndowed')
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
@@ -42,7 +43,7 @@ app = BUNDLE(coll,
                'NSHighResolutionCapable': 'True',
                'NSPrincipleClass': 'NSApplication',
                'NSAppleScriptEnabled': False,
-               'CFBundleShortVersionString': '1.0',
+               'CFBundleShortVersionString': '1.1.0',
                'CFBundleDocumentTypes': [
                   {
                     'CFBundleTypeName': 'My File Format',
