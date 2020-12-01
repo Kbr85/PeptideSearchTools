@@ -1,76 +1,36 @@
-# ------------------------------------------------------------------------------
-# Author: Kenny Bravo Rodriguez 2019 (kenny.bravorodriguez@mpi-dortmund.mpg.de)
-# 
-# Copyright (c) 2019 Max Planck Institute of Molecular Physiology
-#
-# This complete copyright notice must be included in any revised version of the
-# source code. Additional authorship citations may be added, but existing
-# author citations must be preserved.
-# 
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
-# ------------------------------------------------------------------------------
+Copyright (c) 2019 Max Planck Institute of Molecular Physiology
 
+Author: Kenny Bravo Rodriguez 2019 (kenny.bravorodriguez@mpi-dortmund.mpg.de)
 
-""" This module creates the window to show the License Agreement """
+This complete copyright notice must be included in any revised version of the
+source code. Additional authorship citations may be added, but existing
+author citations must be preserved.
 
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-#--- Imports
-import wx
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License below for more details.
 
-import config.config as config
-import menu.menu as menu
-from gui.win.win_base_help import HelpWinBase
-#---
+## Modules and Libraries  ##
 
+Peptide Search Tools 1.1.0 uses the following modules and libraries:
 
-class LicAgreementWin(HelpWinBase):
-	""" Creates the window to show the Lic. Agreement """
-
-	def __init__(self, parent=None):
-		"""  """
-
-	 #--> Initial Setup
-		self.nameWin = config.winName['licagr']
-		super().__init__(None)
-	 #---
-	 #--> Add Lic Agreement Text
-		self.MyText.AppendText(LicAgreementText)
-		self.MyText.SetInsertionPoint(0)
-	 #---
-	 #--> Show 		
-		self.Show()
-	 #---
-	#---
-#---
-
-
-LicAgreementText = """## Modules and Libraries  ##
-
-Peptide Search Tools 1.0 uses the following modules and libraries:
-
-NumPy 1.16.1 https://numpy.org/license.html
-Pandas 0.24.2 https://pandas.pydata.org/docs/index.html
-PyInstaller 3.4 https://www.pyinstaller.org/license.html
-Python 3.7.1 https://docs.python.org/3/license.html
-wxPython 4.0.4 https://wxpython.org/pages/license/
+Data Analysis Tools for Science - Core 0.0.2 (In house developed python module)
+PyInstaller 4.0 (https://www.pyinstaller.org/license.html)
+Python 3.8.5 (https://docs.python.org/3/license.html)
+wxPython 4.1.0 (https://wxpython.org/pages/license/)
 
 The copyrights notes and license agreements for these modules and libraries can
 be found in the respective web sites.
 
-## Peptide Search Tool 1.0 License  ##
+## Peptide Search Tool 1.1.0 License  ##
 
-Peptide Search Tools 1.0 is distributed under the GPLv3 license.
+Peptide Search Tools 1.1.0 is distributed under the GPL-3 license.
 
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
@@ -693,6 +653,3 @@ Program, unless a warranty or assumption of liability accompanies a
 copy of the Program in return for a fee.
 
                      END OF TERMS AND CONDITIONS
-
-"""
-

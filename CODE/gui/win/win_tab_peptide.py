@@ -22,7 +22,7 @@
 # ------------------------------------------------------------------------------
 
 
-""" This module generates the tab to locate the  N-terminally peptide in a 
+""" This module generates the tab to locate the N-terminally peptide in a 
 	MaxQuant peptide.txt file
 """
 
@@ -87,7 +87,8 @@ class Peptide(BaseTab):
 		self.sizerboxColumnsWid.Add(
 			self.tcStartResCol, 
 			border=2, 
-			flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			# flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			flag=wx.EXPAND|wx.ALL
 		)
 		self.sizerboxColumnsWid.Add(
 			self.stCol2ExtrCol, 
@@ -97,7 +98,8 @@ class Peptide(BaseTab):
 		self.sizerboxColumnsWid.Add(
 			self.tcCol2ExtrCol, 
 			border=2, 
-			flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			# flag=wx.EXPAND|wx.ALIGN_CENTER|wx.ALL
+			flag=wx.EXPAND|wx.ALL
 		)
 	  #---	 
 	  #--> Set & Fit
