@@ -1,0 +1,174 @@
+---> Brief Description of Peptide Search Tools 1.1.0 <---
+
+
+Peptide Search Tools v1.1.0 is designed as a Notebook in which each tab gives 
+access to specific functionalities. The main objective is to search for peptide
+sequences in different files with various search criteria.
+
+
+---> Description of individual tabs <---
+
+
+
+
+#### The Consensus Tab ####
+
+
+This tab allows to search a multifasta file for a given set of consensus
+sequences. The set of consensus sequences can be searched for in a given set of
+residue numbers or in the whole sequence of the proteins. Read below for more 
+details. 
+
+--------------------------------------------------------------------------------
+	The Tab assumes that the multifasta file follows the UNIPROT format for 
+	the header of fasta files
+--------------------------------------------------------------------------------
+
+All fields in the tab must be filled before starting the analysis.
+
+- The Fasta File button allows to browse the file system to select a fasta 
+	formated file containing multiple protein sequences. Only files with txt or 
+	fasta extension can be selected.
+- The Output File button allows to browse the file system to select the Output 
+	file. Only files with txt extension can be selected.
+- The Positions & AAs button allows to specify the positions and the amino acids
+	in the consensus sequence. This field is not meant to be filled by hand.
+	To input the values use the Positions & AAs.
+- The Only complete proteins checkbox allows to select whether to consider all
+	sequences in the multifasta file (unchecked state) or only the sequences of
+	complete proteins (checked state).
+
+The Poistions & AAs button opens a new window where the amino acids in the 
+consensus sequences and the residue numbers can be specified. The use of the 
+window is straightforward. Type the total number of residues in the consensus 
+sequences and then press the button Create fields. The appropiate number of 
+fields for the Residue numbers and AAs in the consensus sequences will be 
+created. 
+
+The expected input in each Residue number fields is the residue number of the 
+protein sequence in which to look for the corresponding amino acid in the 
+consensus sequences. Thus, an integer greater than cero is the expected input in
+these fields. The residue numbers do not have to be consecutive but they are 
+expected to be unique and monotonically increasing. Alternative, all residue 
+number fields can be set to NA. In this case, the search for the consensus 
+sequence is performed along the entire sequence of the proteins in the fasta 
+file, but the consensus sequence is assumed to appear with no gaps in the 
+protein sequences. The expected input in the fields Amino acids is a 
+space-separated list of amino acids (one letter code). In each field, values
+must be unique.
+
+--------------------------------------------------------------------------------
+	Right clicking the Residue numbers label will set all Residue number fields
+	to NA.
+--------------------------------------------------------------------------------
+
+Special care must be taken with incomplete sequences when dealing with a 
+multifasta file automatically generated. The UniProt convention is to mark these
+sequences with the word Fragment in the header section and the presence or 
+absence of this word is what it is used to exclude incomplete sequences from the
+analysis. If all proteins are to be included in the analysis it is important to 
+be aware that for incomplete sequences:
+- there is no way to know the actual residue numbers
+- there is no way to know if there are gaps between adjacent residues in the 
+  sequence
+
+Therefore, including incomplete sequences in the analysis should be done only in
+very specific situations, e.g. manually curated multifasta file.  
+
+The Output file will be a plain text file with two sections. The first section 
+(Input Data) will list the given search options. The second section contains the
+Output data.	
+
+The information in the Output data section includes the total number of proteins
+in the multifasta file, the total number of complete proteins, the total number 
+of fragment proteins and the total number of proteins in which the consensus
+sequence was found.
+
+The last part of the section shows a detailed information about each sequence
+in the consensus set including the number of proteins in which the sequence was
+found and the protein IDs. The number of proteins in which the sequence was 
+found is given as an absolute number and also as percent with respect to the 
+total or complete protein numbers if fragments are included or excluded from the
+analysis.
+
+If the search is performed in the entire sequence of the proteins in the fasta 
+file then, more than one consensus sequence can be found in a given protein.
+Therefore, a list of Proteins IDs and consensus sequences identified for each
+protein is also given in the output.
+
+
+#### The Genes.fasta Tab ####
+
+
+This tab allows to extract the N-terminal sequences, up to a user-defined 
+length, of all proteins present in a multisequence fasta formated file that 
+are encoded by a list of user-defined genes. 
+
+All fields in the tab must be filled before starting the analysis.
+
+- The Fasta File button allows to browse the file system to select a fasta 
+	formated file containing multiple protein sequences. Only files with txt or 
+	fasta extension can be selected.
+- The Genes File button allows to browse the file system to select a plain text 
+	file containing a list of genes. Only files with txt extension can be 
+	selected. This file must contain a gene or a semicolon-separated 
+	(;) list of genes in each line, for example:
+
+	NME6
+	TRIM17
+	KLC2;PRKN
+	POTEJ
+	P3H3
+
+- The Output File button allows to browse the file system to select the Output 
+	file. Only files with txt extension can be selected.
+- The Residues to Extract field allows to a specify the length of the N-terminal 
+	peptides that will be extracted. Only a list of unique integers greater than
+	cero can be accepted here, e.g. 5 10 25 50 100.
+
+The Output file will be a plain text file with two sections. The first section 
+(Input Data) will list the given search options. The second section contains the
+output data.
+
+The first row of the output section will have the name of the columns and the 
+rest of the rows will be the identified proteins belonging to the given genes
+with the peptide sequences. The output is sorted by gene name.
+
+
+#### The Peptide.txt Tab ####
+
+
+This tab allows to extract all N-terminal peptides found in a Maxquant 
+peptide.txt file. In general, any file with tab separated columns and column 
+names in the first row can be correctly searched. 
+
+All fields in the tab must be filled before starting the search. 
+
+- The Data File button allows to browse the file system to select the input 
+	file. Only files with txt extension can be selected. Once the file is 
+	selected the name and number of the columns in the file will be shown in the
+	right section of the tab.
+- The Output File button allows to browse the file system to select the output 
+	file. Only files with txt extension can be selected.
+- The field First Residue <= allows to specify a residue number. Peptides for 
+	which the residue number of the first residue is lower or equal to the 
+	specified number will be extracted from the Data File and saved in the 
+	Output File. Only an integer greater than zero can be accepted here.
+- The field Start Residue allows to specify the column in the Data File with
+	the residue number of the first residue of the detected sequences. Only an 
+	integer greater or equal than zero can be accepted here.
+- The field Columns to Extract allows to specify the columns in the Data File 
+	that will be extracted. Only a list of integers greater or equal than
+	zero can be accepted here, e.g. 0 1 2 6 34 50.
+
+The Output file will be a plain text file with a format similar to the given 
+Data file. Only the specified Columns to Extract will be included in the 
+Output file and columns will be tab separated. The file will have two section.
+The first section (Input Data) will list the given search options. The second 
+section contains the output data.
+
+The first row in the Output Data section will have the name of the extracted 
+columns. The other rows will contain sequences from the Data file for which the 
+residue number of the first residue is equal or lower than the specified First 
+Residue <= value. 
+

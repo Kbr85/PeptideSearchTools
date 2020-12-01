@@ -25,86 +25,142 @@
 """ This module creates the menu of the app """
 
 
-#--- Imports
+#region -------------------------------------------------------------> Imports
 import wx
 
 import config.config as config
-import gui.gui_methods as gmethods
+#endregion ----------------------------------------------------------> Imports
+
+#region ----------------------------------------------------------> Base menus
+class MenuMethods():
+	"""Hold common methods for the individual menu Classes
+	
+		Methods
+		-------
+		CreateTab(config.name['X'])
+			Creates the tab for X
+	"""
+	#region ---------------------------------------------------> Class methods
+	def CreateTab(self, event):
+		""" Creates the selected tab 
+		
+			Parameters
+			----------
+			event : wx.Event
+				Event information
+		"""
+
+		win = self.GetWindow()
+
+		if win.CreateTab(self.tab[event.GetId()]):
+			return True
+		else:
+			return False
+	#---	
+	#endregion ------------------------------------------------> Class methods
+#endregion -------------------------------------------------------> Base menus
+
+#region ----------------------------------------------------> Individual menus
+class SearchMenu(wx.Menu, MenuMethods):
+	"""Search menu of the app
+	
+		Attributes
+		----------
+		tab : dict
+			To know which tab to create based on the selected menu item
+	"""
+
+	#region -----------------------------------------------------> Class setup
+	tab = {
+		1 : config.name['Tab']['Peptide'],
+		2 : config.name['Tab']['Gene'],
+		3 : config.name['Tab']['Consensus'],
+	}
+	#endregion --------------------------------------------------> Class setup
+	
+	#region --------------------------------------------------> Instance setup
+	def __init__(self):
+		""" """
+		#region -----------------------------------------------> Initial setup
+		super().__init__()
+	 	#endregion --------------------------------------------> Initial setup
+
+		#region --------------------------------------------------> Menu items
+		self.Append(3, config.title['Consensus']+'\tAlt+Ctrl+C')
+		self.Append(2, config.title['Gene']+'\tAlt+Ctrl+G')
+		self.Append(1, config.title['Peptide']+'\tAlt+Ctrl+P')
+		#endregion -----------------------------------------------> Menu items
+
+		#region --------------------------------------------------------> Bind
+		self.Bind(wx.EVT_MENU, self.CreateTab, id=1)
+		self.Bind(wx.EVT_MENU, self.CreateTab, id=2)
+		self.Bind(wx.EVT_MENU, self.CreateTab, id=3)
+		#endregion -----------------------------------------------------> Bind
+	 #---
+	#---
+	#endregion -----------------------------------------------> Instance setup
 #---
 
+class HelpMenu(wx.Menu, MenuMethods):
+	"""Help menu of the app
+	
+		Attributes
+		----------
+		tab : dict
+			To know which tab to create based on the selected menu item	
+	"""
 
+	#region -----------------------------------------------------> Class setup
+	tab = {
+		4 : config.name['Tab']['Help'],
+		5 : config.name['Tab']['LicAgr'],
+	}
+	#endregion --------------------------------------------------> Class setup
+
+	#region --------------------------------------------------- Instance Setup
+	def __init__(self):
+		""" """
+		#region -----------------------------------------------> Initial setup
+		super().__init__()
+	 	#endregion --------------------------------------------> Initial setup
+
+		#region --------------------------------------------------> Menu items
+		self.Append(4, config.title['Help'])
+		self.AppendSeparator()
+		self.Append(5, config.title['LicAgr'])
+		#endregion -----------------------------------------------> Menu items
+
+		#region --------------------------------------------------------> Bind
+		self.Bind(wx.EVT_MENU, self.CreateTab, id=4)
+		self.Bind(wx.EVT_MENU, self.CreateTab, id=5)
+		#endregion -----------------------------------------------------> Bind
+	 #---
+	#---
+	#endregion -----------------------------------------------> Instance setup
+#---
+#endregion -------------------------------------------------> Individual menus
+
+#region ------------------------------------------------------------> MenuBars
 class MainMenuBar(wx.MenuBar):
 	""" Main menu of the app """
 
 	#region --------------------------------------------------- Instance Setup
 	def __init__(self):
 		""" """
-
+		#region -----------------------------------------------> Initial setup
 		super().__init__()
-	 #--> Menu items
-	  #--> Notebook menu
-		NoteBookMenu = wx.Menu()
-		NoteBookMenu.Append(101, config.tabName['pept']+'\tAlt+Ctrl+P')
-		NoteBookMenu.Append(102, config.tabName['gene']+'\tAlt+Ctrl+G')
-		NoteBookMenu.Append(103, config.tabName['seqset']+'\tAlt+Ctrl+C')
-	  #---
-	  #--> Help menu
-		HelpMenu = wx.Menu()
-		HelpMenu.Append(301, config.winName['help'])
-		HelpMenu.AppendSeparator()
-		HelpMenu.Append(302, config.winName['licagr'])
-	  #---
-	 #--> Attach to menubar
-		self.Append(NoteBookMenu, '&Search')
-		self.Append(HelpMenu, '&Help')
-	 #---
-	 #--> Bind
-		self.Bind(wx.EVT_MENU, self.OnTabPeptide, id=101)
-		self.Bind(wx.EVT_MENU, self.OnTabGene, id=102)
-		self.Bind(wx.EVT_MENU, self.OnTabSeqSet, id=103)
-		self.Bind(wx.EVT_MENU, self.OnHelp, id=301)
-		self.Bind(wx.EVT_MENU, self.OnLicAgr, id=302)
-	 #---
+	 	#endregion --------------------------------------------> Initial setup
+		
+		#region -------------------------------------------------------> Menus
+		search = SearchMenu()
+		helpM = HelpMenu() 
+
+		self.Append(search, '&Search')
+		self.Append(helpM, '&Help')
+		#endregion ----------------------------------------------------> Menus
 	#---
 	#endregion ------------------------------------------------ Instance Setup
-
-	# --------------------------------------------------- Methods of the class
-	#region --------------------------------------------------------- id = 1xx
-	def OnTabPeptide(self, event):
-		""" Creates the main window and show the peptide tab """
-
-		gmethods.TabSelect(config.tabOrder[config.tabName['pept']])
-		return True
-	#---
-
-	def OnTabGene(self, event):
-		""" Creates the main window and change to the gene tab """
-
-		gmethods.TabSelect(config.tabOrder[config.tabName['gene']])
-		return True
-	#---
-
-	def OnTabSeqSet(self, event):
-		""" Creates the main window and change to the consensus tab """
-
-		gmethods.TabSelect(config.tabOrder[config.tabName['seqset']])
-		return True
-	#---	
-	#endregion ------------------------------------------------------ id = 1xx
-
-  	#region --------------------------------------------------------- id = 3xx
-	def OnLicAgr(self, event):
-		""" Show the window for the Lic Agreement """
-
-		gmethods.WinMainTypeCreate(config.winName['licagr'])
-		return True
-	#---
-
-	def OnHelp(self, event):
-		""" Creates the help window """
-
-		gmethods.WinMainTypeCreate(config.winName['help'])
-		return True
-	#---
-	#endregion ------------------------------------------------------ id = 3xx
 #---
+#endregion ---------------------------------------------------------> MenuBars
+
+
