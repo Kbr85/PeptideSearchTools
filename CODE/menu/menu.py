@@ -113,8 +113,8 @@ class HelpMenu(wx.Menu, MenuMethods):
 
 	#region -----------------------------------------------------> Class setup
 	tab = {
-		1 : config.name['Tab']['Help'],
-		2 : config.name['Tab']['LicAgr'],
+		4 : config.name['Tab']['Help'],
+		5 : config.name['Tab']['LicAgr'],
 	}
 	#endregion --------------------------------------------------> Class setup
 
@@ -126,14 +126,14 @@ class HelpMenu(wx.Menu, MenuMethods):
 	 	#endregion --------------------------------------------> Initial setup
 
 		#region --------------------------------------------------> Menu items
-		self.Append(1, config.title['Help'])
+		self.Append(4, config.title['Help'])
 		self.AppendSeparator()
-		self.Append(2, config.title['LicAgr'])
+		self.Append(5, config.title['LicAgr'])
 		#endregion -----------------------------------------------> Menu items
 
 		#region --------------------------------------------------------> Bind
-		self.Bind(wx.EVT_MENU, self.CreateTab, id=1)
-		self.Bind(wx.EVT_MENU, self.CreateTab, id=2)
+		self.Bind(wx.EVT_MENU, self.CreateTab, id=4)
+		self.Bind(wx.EVT_MENU, self.CreateTab, id=5)
 		#endregion -----------------------------------------------------> Bind
 	 #---
 	#---
